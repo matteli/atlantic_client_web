@@ -1,18 +1,35 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <img src="@/assets/img/Breguet_Atlantic.jpg" alt="Breguet Atlantic" width="100%">
+    <h1 class="text-center bg-primary">Bienvenue sur Atlantic</h1>
+    <div class="d-flex justify-content-center flex-wrap">
+      <b-button
+        v-for="plane in planes"
+        v-bind:key="plane.registration"
+        size="lg"
+        variant="primary"
+        v-bind:href="'/#/log3s/' + plane.registration"
+        class="m-1"
+      >{{ plane.registration }}</b-button>
+    </div>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
+import Vue from "vue";
 export default {
-  name: 'home',
-  components: {
-    HelloWorld
+  name: "Home",
+  data() {
+    return {
+      planes: []
+    };
+  },
+
+  mounted() {
+    Vue.axios.get("/planes").then(data => {
+      //console.log(data);
+      this.planes = data.data;
+    });
   }
-}
+};
 </script>
