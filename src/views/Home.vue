@@ -5,11 +5,13 @@
     <div>
       <b-card-group deck>
         <b-card
+          bg-variant="light"
           v-for="plane in planes"
           v-bind:key="plane.registration"
           v-bind:title="plane.registration"
+          style="max-width: 20rem;"
         >
-          <b-card-text>{{ plane.manufacturer }} {{ plane.model }} ({{ plane.msn }})</b-card-text>
+          <b-card-text>{{ plane.manufacturer }} {{ plane.model }} (MSN {{ plane.msn }})</b-card-text>
           <b-button v-bind:href="'/#/log3s/' + plane.registration">3D</b-button>
         </b-card>
       </b-card-group>
