@@ -94,8 +94,8 @@
           </b-button-group>
         </b-navbar-nav>
         <b-navbar-nav class="ml-auto">
-          <b-button variant="primary" class="mx-1">
-            <font-awesome-icon icon="home" @click />
+          <b-button variant="primary" href="/#/" class="mx-1">
+            <font-awesome-icon icon="home" />
           </b-button>
           <login class="mx-1" v-on:clear="clearAddView()">
             <template v-slot:login>

@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <img src="@/assets/img/Breguet_Atlantic.jpg" alt="Breguet Atlantic" width="100%">
+    <img src="@/assets/img/Breguet_Atlantic.jpg" alt="Breguet Atlantic" width="100%" />
     <h1 class="text-center bg-primary">Bienvenue sur Atlantic</h1>
     <div class="d-flex justify-content-center flex-wrap">
       <b-button
@@ -19,6 +19,7 @@
 import Vue from "vue";
 export default {
   name: "Home",
+
   data() {
     return {
       planes: []
