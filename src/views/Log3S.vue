@@ -445,9 +445,10 @@ export default {
       }
     },
 
-    newPage() {
+    newPage(resp) {
       if (this.sphereCursor) this.sphereCursor.visible = false;
-      this.loadLabels();
+      var length = this.labels.push(resp.data);
+      this.selectedLabel = this.labels[length - 1];
     },
 
     loadLabels() {
@@ -513,7 +514,7 @@ export default {
     };
     this.$nextTick(() => window.addEventListener("resize", this.resizeWindow));
     this.loadPlane();
-    this.loadLabels(false);
+    this.loadLabels();
     this.loadView();
   },
 

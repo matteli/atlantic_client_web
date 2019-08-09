@@ -145,10 +145,10 @@ export default {
           "/planes/" + this.$route.params.registration + "/pages",
           this.data
         )
-        .then(() => {
+        .then(resp => {
           this.$nextTick(() => {
             this.clear();
-            this.$emit("add-page");
+            this.$emit("add-page", resp);
             this.$refs.add_page_modal.hide();
           });
         })
