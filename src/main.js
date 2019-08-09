@@ -9,10 +9,10 @@ import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faLessThan, faGreaterThan, faVideo, faTimes, faCheck, faTrash, faSyncAlt, faTasks, faUser, faCommentAlt, faExclamationCircle, faCamera, faFile, faFileAlt, faSignInAlt, faSignOutAlt, faFileSignature, faBolt, faTools, faExclamationTriangle, faCheckSquare, faListAlt, faPlane } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faLessThan, faGreaterThan, faVideo, faTimes, faCheck, faTrash, faSyncAlt, faTasks, faUser, faCommentAlt, faExclamationCircle, faCamera, faFile, faFileAlt, faSignInAlt, faSignOutAlt, faFileSignature, faBolt, faTools, faExclamationTriangle, faCheckSquare, faListAlt, faPlane } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
 
-library.add([faLessThan, faGreaterThan, faVideo, faTimes, faCheck, faTrash, faSyncAlt, faTasks, faUser, faCommentAlt, faExclamationCircle, faCamera, faFile, faFileAlt, faFileSignature, faBolt, faTools, faExclamationTriangle, faCheckSquare, faListAlt, faPlane, faSignInAlt, faSignOutAlt])
+library.add([faHome, faLessThan, faGreaterThan, faVideo, faTimes, faCheck, faTrash, faSyncAlt, faTasks, faUser, faCommentAlt, faExclamationCircle, faCamera, faFile, faFileAlt, faFileSignature, faBolt, faTools, faExclamationTriangle, faCheckSquare, faListAlt, faPlane, faSignInAlt, faSignOutAlt])
 Vue.use(BootstrapVue)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.config.productionTip = false;
