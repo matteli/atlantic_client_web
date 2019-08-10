@@ -169,14 +169,19 @@ export class PlaneViewer {
     onMouseClick(event) {
         // calculate mouse position in normalized device coordinates
         // (-1 to +1) for both components
-        if (event.button == 0) {
+        if (event.type == "click" && event.button == 0) {
             this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
             this.mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-            this.raycaster.setFromCamera(this.mouse, this.camera)
-            var intersects = this.raycaster.intersectObjects(this.plane[this.planeActivated].children, true);
-            if (intersects.length > 0) return intersects[0];
+        } else if (event.type == "touchend" && event.changedTouches.length == 1) {
+            this.mouse.x = (event.changedTouches[0].clientX / window.innerWidth) * 2 - 1;
+            this.mouse.y = - (event.changedTouches[0].clientY / window.innerHeight) * 2 + 1;
+        } else {
+            return null;
         }
-        return null;
+        this.raycaster.setFromCamera(this.mouse, this.camera)
+        var intersects = this.raycaster.intersectObjects(this.plane[this.planeActivated].children, true);
+        if (intersects.length > 0) return intersects[0];
+        else return null;
     }
 
     moveTo(camera, fromCamera = this.getCamera()) {

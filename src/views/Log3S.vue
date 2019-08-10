@@ -119,7 +119,7 @@
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
-    <div id="plane" ref="plane" v-on:click="onClickScene"></div>
+    <div id="plane" ref="plane" v-on:click="onClickScene" @touchend="onClickScene"></div>
     <view-page v-bind:label="getSelectedLabel" v-on:labelchanged="loadLabels()" />
   </div>
 </template>
