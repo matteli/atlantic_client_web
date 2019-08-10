@@ -375,7 +375,6 @@ export default {
       Vue.axios
         .get("/planes/" + this.$route.params.registration + "/cameras")
         .then(data => {
-          console.log(data);
           data.data.forEach(view => {
             this.$set(this.viewsData, view.id, view);
             this.$set(this.viewsOptions, view.id, view.name);
