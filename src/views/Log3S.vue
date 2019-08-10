@@ -1,123 +1,120 @@
 <template>
   <div>
-    <b-navbar toggleable="lg" type="light" variant="light" fixed="top">
+    <b-navbar type="light" variant="light" fixed="top">
       <b-navbar-brand>{{ plane.registration }}</b-navbar-brand>
-      <b-navbar-toggle target="nav-collapse" />
-      <b-collapse is-nav id="nav-collapse">
-        <b-navbar-nav>
-          <add-page
-            v-on:add-page="newPage"
-            v-bind:cursor="getPosCursor"
-            v-bind:camera="getCamera"
-            class="mx-1"
-          />
-          <b-dropdown title="Views" class="mx-1" variant="primary" v-bind:disabled="tour">
-            <template slot="button-content">
-              <font-awesome-icon icon="video" />
-              <span class="sr-only">View</span>
-            </template>
-            <b-dropdown-item
-              v-for="(name, id) in viewsOptions"
-              v-bind:key="id"
-              v-bind:value="id"
-              @click="view=id"
-            >{{name}}</b-dropdown-item>
-          </b-dropdown>
-          <b-dropdown id="label-filters" class="mx-1" variant="primary" v-bind:disabled="tour">
-            <template slot="button-content">
-              <font-awesome-icon
-                v-if="colorLabel=='N'"
-                title="Colors are nature"
-                icon="exclamation-triangle"
-              />
-              <font-awesome-icon
-                v-else-if="colorLabel=='P'"
-                title="Colors are progress"
-                icon="tasks"
-              />
-            </template>
-            <b-dropdown-form>
-              <b-form-group>
-                <b-form-radio-group id="color-label" v-model="colorLabel" buttons>
-                  <b-form-radio value="N" title="Nature" button-variant="outline-primary">
-                    <font-awesome-icon icon="exclamation-triangle" />
-                  </b-form-radio>
-                  <b-form-radio value="P" title="Progress" button-variant="outline-primary">
-                    <font-awesome-icon icon="tasks" />
-                  </b-form-radio>
-                </b-form-radio-group>
-              </b-form-group>
-              <b-form-group v-if="colorLabel=='N'">
-                <b-form-checkbox-group v-model="filters.nature" buttons id="filters-nature">
-                  <b-form-checkbox title="Damage" value="D" button-variant="outline-danger">
-                    <font-awesome-icon icon="bolt" />
-                  </b-form-checkbox>
-                  <b-form-checkbox title="Works" value="W" button-variant="outline-success">
-                    <font-awesome-icon icon="tools" />
-                  </b-form-checkbox>
-                  <b-form-checkbox title="Others" value="O" button-variant="outline-warning">
-                    <font-awesome-icon icon="exclamation-triangle" />
-                  </b-form-checkbox>
-                </b-form-checkbox-group>
-              </b-form-group>
-              <b-form-group v-else-if="colorLabel=='P'">
-                <b-form-checkbox-group v-model="filters.progress" buttons id="filters-progress">
-                  <b-form-checkbox title="Opened" value="O" button-variant="outline-danger">
-                    <font-awesome-icon icon="file" />
-                  </b-form-checkbox>
-                  <b-form-checkbox title="Fixed" value="F" button-variant="outline-warning">
-                    <font-awesome-icon icon="file-alt" />
-                  </b-form-checkbox>
-                  <b-form-checkbox title="Checked" value="C" button-variant="outline-success">
-                    <font-awesome-icon icon="file-signature" />
-                  </b-form-checkbox>
-                </b-form-checkbox-group>
-              </b-form-group>
-              <b-button block variant="primary" @click="loadLabels()">
-                <font-awesome-icon icon="sync-alt" />
-              </b-button>
-            </b-dropdown-form>
-          </b-dropdown>
-          <b-button class="mx-1" :pressed.sync="tour" variant="outline-warning">
-            <font-awesome-icon icon="plane" />
+      <b-navbar-nav>
+        <add-page
+          v-on:add-page="newPage"
+          v-bind:cursor="getPosCursor"
+          v-bind:camera="getCamera"
+          class="mx-1"
+        />
+        <b-dropdown title="Views" class="mx-1" variant="primary" v-bind:disabled="tour">
+          <template slot="button-content">
+            <font-awesome-icon icon="video" />
+            <span class="sr-only">View</span>
+          </template>
+          <b-dropdown-item
+            v-for="(name, id) in viewsOptions"
+            v-bind:key="id"
+            v-bind:value="id"
+            @click="view=id"
+          >{{name}}</b-dropdown-item>
+        </b-dropdown>
+        <b-dropdown id="label-filters" class="mx-1" variant="primary" v-bind:disabled="tour">
+          <template slot="button-content">
+            <font-awesome-icon
+              v-if="colorLabel=='N'"
+              title="Colors are nature"
+              icon="exclamation-triangle"
+            />
+            <font-awesome-icon
+              v-else-if="colorLabel=='P'"
+              title="Colors are progress"
+              icon="tasks"
+            />
+          </template>
+          <b-dropdown-form>
+            <b-form-group>
+              <b-form-radio-group id="color-label" v-model="colorLabel" buttons>
+                <b-form-radio value="N" title="Nature" button-variant="outline-primary">
+                  <font-awesome-icon icon="exclamation-triangle" />
+                </b-form-radio>
+                <b-form-radio value="P" title="Progress" button-variant="outline-primary">
+                  <font-awesome-icon icon="tasks" />
+                </b-form-radio>
+              </b-form-radio-group>
+            </b-form-group>
+            <b-form-group v-if="colorLabel=='N'">
+              <b-form-checkbox-group v-model="filters.nature" buttons id="filters-nature">
+                <b-form-checkbox title="Damage" value="D" button-variant="outline-danger">
+                  <font-awesome-icon icon="bolt" />
+                </b-form-checkbox>
+                <b-form-checkbox title="Works" value="W" button-variant="outline-success">
+                  <font-awesome-icon icon="tools" />
+                </b-form-checkbox>
+                <b-form-checkbox title="Others" value="O" button-variant="outline-warning">
+                  <font-awesome-icon icon="exclamation-triangle" />
+                </b-form-checkbox>
+              </b-form-checkbox-group>
+            </b-form-group>
+            <b-form-group v-else-if="colorLabel=='P'">
+              <b-form-checkbox-group v-model="filters.progress" buttons id="filters-progress">
+                <b-form-checkbox title="Opened" value="O" button-variant="outline-danger">
+                  <font-awesome-icon icon="file" />
+                </b-form-checkbox>
+                <b-form-checkbox title="Fixed" value="F" button-variant="outline-warning">
+                  <font-awesome-icon icon="file-alt" />
+                </b-form-checkbox>
+                <b-form-checkbox title="Checked" value="C" button-variant="outline-success">
+                  <font-awesome-icon icon="file-signature" />
+                </b-form-checkbox>
+              </b-form-checkbox-group>
+            </b-form-group>
+            <b-button block variant="primary" @click="loadLabels()">
+              <font-awesome-icon icon="sync-alt" />
+            </b-button>
+          </b-dropdown-form>
+        </b-dropdown>
+        <b-button class="mx-1" :pressed.sync="tour" variant="outline-warning">
+          <font-awesome-icon icon="plane" />
+        </b-button>
+        <b-button-group class="mx-1">
+          <b-button v-bind:variant="tour ? 'warning':'primary'" @click="previousLabel()">
+            <font-awesome-icon icon="less-than" />
           </b-button>
-          <b-button-group class="mx-1">
-            <b-button v-bind:variant="tour ? 'warning':'primary'" @click="previousLabel()">
-              <font-awesome-icon icon="less-than" />
-            </b-button>
-            <b-button :pressed.sync="centerLabel" variant="outline-warning">
-              <font-awesome-icon icon="video" />
-            </b-button>
-            <b-button v-bind:variant="tour ? 'success':'primary'" @click="nextLabel()">
-              <font-awesome-icon icon="greater-than" />
-            </b-button>
-          </b-button-group>
-        </b-navbar-nav>
-        <b-navbar-nav class="ml-auto">
-          <b-button variant="primary" href="/#/" class="mx-1">
-            <font-awesome-icon icon="home" />
+          <b-button :pressed.sync="centerLabel" variant="outline-warning">
+            <font-awesome-icon icon="video" />
           </b-button>
-          <login class="mx-1" v-on:clear="clearAddView()">
-            <template v-slot:login>
-              <b-form @submit="addView" v-if="addViewData.show">
-                <b-input-group class="mx-1">
-                  <b-form-input
-                    required
-                    v-model="addViewData.data.name"
-                    placeholder="Enter a name for this view..."
-                  />
-                  <b-input-group-append class="mr-2">
-                    <b-button v-if="$auth.check('admin')" type="submit" variant="primary">
-                      <font-awesome-icon icon="camera" />
-                    </b-button>
-                  </b-input-group-append>
-                </b-input-group>
-              </b-form>
-              <b-alert class="m-2" v-show="addViewData.msg" show>{{ addViewData.msg }}</b-alert>
-            </template>
-          </login>
-        </b-navbar-nav>
-      </b-collapse>
+          <b-button v-bind:variant="tour ? 'success':'primary'" @click="nextLabel()">
+            <font-awesome-icon icon="greater-than" />
+          </b-button>
+        </b-button-group>
+      </b-navbar-nav>
+      <b-navbar-nav class="ml-auto">
+        <b-button variant="primary" href="/#/" class="mx-1">
+          <font-awesome-icon icon="home" />
+        </b-button>
+        <login class="mx-1" v-on:clear="clearAddView()">
+          <template v-slot:login>
+            <b-form @submit="addView" v-if="addViewData.show">
+              <b-input-group class="mx-1">
+                <b-form-input
+                  required
+                  v-model="addViewData.data.name"
+                  placeholder="Enter a name for this view..."
+                />
+                <b-input-group-append class="mr-2">
+                  <b-button v-if="$auth.check('admin')" type="submit" variant="primary">
+                    <font-awesome-icon icon="camera" />
+                  </b-button>
+                </b-input-group-append>
+              </b-input-group>
+            </b-form>
+            <b-alert class="m-2" v-show="addViewData.msg" show>{{ addViewData.msg }}</b-alert>
+          </template>
+        </login>
+      </b-navbar-nav>
     </b-navbar>
     <div id="plane" ref="plane" v-on:click="onClickScene" @touchend="onClickScene"></div>
     <view-page v-bind:label="getSelectedLabel" v-on:labelchanged="loadLabels()" />
@@ -530,7 +527,7 @@ body,
 #app {
   width: 100%;
   height: 100%;
-  min-width: 640px;
+  min-width: 360px;
   min-height: 360px;
   position: relative;
   overflow: hidden;
@@ -539,7 +536,7 @@ body,
 #plane {
   width: 100%;
   height: 100%;
-  min-width: 640px;
+  min-width: 360px;
   min-height: 360px;
   position: relative;
   overflow: hidden;
