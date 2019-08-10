@@ -62,10 +62,12 @@ export default {
         this.eltThumb = document.getElementById("thumb");
         this.ctxPhoto = this.eltPhoto.getContext("2d");
         this.ctxThumb = this.eltThumb.getContext("2d");
-        navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
-          this.video.srcObject = stream;
-          this.video.play();
-        });
+        navigator.mediaDevices
+          .getUserMedia({ video: { facingMode: "environment" } })
+          .then(stream => {
+            this.video.srcObject = stream;
+            this.video.play();
+          });
         if (this.srcPhoto) {
           var photo = new Image();
           var thumb = new Image();
