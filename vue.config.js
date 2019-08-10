@@ -2,7 +2,19 @@ module.exports = {
     publicPath: '/',
     pwa: {
         workboxOptions: {
-            skipWaiting: true
+            skipWaiting: true,
+            runtimeCaching: [
+                {
+                    urlPattern: new RegExp("/api/"),
+                    handler: "staleWhileRevalidate",
+                    options: {
+                        cacheName: 'api-cache',
+                        cacheableResponse: {
+                            statuses: [0, 200],
+                        },
+                    }
+                },
+            ]
         }
     },
     devServer: {
