@@ -54,59 +54,51 @@ export default {
     };
   },
 
-  created() {
-    this.constraints = {
-      landscape: {
-        video: {
-          width: 640,
-          height: 480,
-          facingMode: "environment"
-        }
-      },
-      portrait: {
-        video: {
-          width: 640,
-          height: 480,
-          facingMode: "environment"
-        }
-      }
-    };
-  },
-
   methods: {
     init() {
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        this.video = document.getElementById("video");
-        this.eltPhoto = document.getElementById("photo");
-        this.eltThumb = document.getElementById("thumb");
-        this.ctxPhoto = this.eltPhoto.getContext("2d");
-        this.ctxThumb = this.eltThumb.getContext("2d");
-        navigator.mediaDevices
-          .getUserMedia({
-            video: {
-              width: 640,
-              height: 480,
-              facingMode: "environment"
-            }
-          })
-          .then(stream => {
-            this.video.srcObject = stream;
-            this.video.play();
-          });
-        if (this.srcPhoto) {
-          var photo = new Image();
-          var thumb = new Image();
-          photo.onload = () => {
-            this.ctxPhoto.drawImage(photo, 0, 0);
-          };
-          thumb.onload = () => {
-            this.ctxThumb.drawImage(thumb, 0, 0);
-          };
-          photo.src = this.srcPhoto;
-          thumb.src = this.srcThumb;
+        if (ScreenOrientation && ScreenOrientation.lock) {
+          ScreenOrientation.lock("landscape-primary").then(() =>
+            this.initDevice()
+          );
+        } else {
+          this.initDevice();
         }
       }
     },
+
+    initDevice() {
+      this.video = document.getElementById("video");
+      this.eltPhoto = document.getElementById("photo");
+      this.eltThumb = document.getElementById("thumb");
+      this.ctxPhoto = this.eltPhoto.getContext("2d");
+      this.ctxThumb = this.eltThumb.getContext("2d");
+      navigator.mediaDevices
+        .getUserMedia({
+          video: {
+            width: 640,
+            height: 480,
+            facingMode: "environment"
+          }
+        })
+        .then(stream => {
+          this.video.srcObject = stream;
+          this.video.play();
+        });
+      if (this.srcPhoto) {
+        var photo = new Image();
+        var thumb = new Image();
+        photo.onload = () => {
+          this.ctxPhoto.drawImage(photo, 0, 0);
+        };
+        thumb.onload = () => {
+          this.ctxThumb.drawImage(thumb, 0, 0);
+        };
+        photo.src = this.srcPhoto;
+        thumb.src = this.srcThumb;
+      }
+    },
+
     clear() {
       this.snap = true;
       this.srcPhoto = "";
