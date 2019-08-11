@@ -16,7 +16,7 @@
     >
       <div class="text-center">
         <div v-show="snap">
-          <video id="video" width="640" height="480" autoplay />
+          <video id="video" autoplay />
           <b-button class="video-button video-left-button" pill @click="getPhoto()">
             <font-awesome-icon icon="camera" />
           </b-button>
@@ -54,6 +54,25 @@ export default {
     };
   },
 
+  created() {
+    this.constraints = {
+      landscape: {
+        video: {
+          width: 640,
+          height: 480,
+          facingMode: "environment"
+        }
+      },
+      portrait: {
+        video: {
+          width: 640,
+          height: 480,
+          facingMode: "environment"
+        }
+      }
+    };
+  },
+
   methods: {
     init() {
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -63,7 +82,13 @@ export default {
         this.ctxPhoto = this.eltPhoto.getContext("2d");
         this.ctxThumb = this.eltThumb.getContext("2d");
         navigator.mediaDevices
-          .getUserMedia({ video: { facingMode: "environment" } })
+          .getUserMedia({
+            video: {
+              width: 640,
+              height: 480,
+              facingMode: "environment"
+            }
+          })
           .then(stream => {
             this.video.srcObject = stream;
             this.video.play();
@@ -96,12 +121,14 @@ export default {
       this.srcPhoto = this.eltPhoto.toDataURL("image/jpeg", 1.0);
       this.srcThumb = this.eltThumb.toDataURL("image/jpeg", 1.0);
       this.$emit("get-photo", this.srcPhoto);
+      this.video.srcObject.getTracks()[0].stop();
       this.$bvModal.hide(this.uid);
     },
     quit() {
       this.srcPhoto = "";
       this.srcThumb = "";
       this.$emit("get-photo", "");
+      this.video.srcObject.getTracks()[0].stop();
       this.$bvModal.hide(this.uid);
     }
   }
