@@ -5,7 +5,7 @@ module.exports = {
             skipWaiting: true,
             runtimeCaching: [
                 {
-                    urlPattern: new RegExp("/api/"),
+                    urlPattern: /\/api\//,
                     handler: "staleWhileRevalidate",
                     options: {
                         cacheName: 'api-cache',
@@ -14,6 +14,27 @@ module.exports = {
                         },
                     }
                 },
+                {
+                    urlPattern: /\/media\//,
+                    handler: "cacheFirst",
+                    options: {
+                        cacheName: 'media-cache',
+                        cacheableResponse: {
+                            statuses: [0, 200],
+                        },
+                    }
+                },
+                {
+                    urlPattern: /\/img\/icons|\.ico/,
+                    handler: "cacheFirst",
+                    options: {
+                        cacheName: 'ico-cache',
+                        cacheableResponse: {
+                            statuses: [0, 200],
+                        },
+                    }
+                },
+
             ]
         }
     },
