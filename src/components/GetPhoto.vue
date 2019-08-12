@@ -95,12 +95,14 @@ export default {
     savePhoto() {
       this.srcPhoto = this.eltPhoto.toDataURL("image/jpeg", 1.0);
       this.srcThumb = this.eltThumb.toDataURL("image/jpeg", 1.0);
+      this.video.srcObject.getTracks()[0].stop();
       this.$emit("get-photo", this.srcPhoto);
       this.$bvModal.hide(this.uid);
     },
     quit() {
       this.srcPhoto = "";
       this.srcThumb = "";
+      this.video.srcObject.getTracks()[0].stop();
       this.$emit("get-photo", "");
       this.$bvModal.hide(this.uid);
     }
