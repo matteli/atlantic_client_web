@@ -1,6 +1,12 @@
 <template>
   <div>
-    <b-button variant="outline-primary" v-b-modal="uid" title="Get Photo">
+    <b-button
+      id="get-photo-button"
+      variant="outline-primary"
+      v-if="visibility"
+      v-b-modal="uid"
+      title="Get Photo"
+    >
       <font-awesome-icon v-show="!srcThumb" icon="camera" />
       <img v-show="srcThumb" v-bind:src="srcThumb" width="31" height="23" />
     </b-button>
@@ -48,38 +54,50 @@ export default {
     uid += 1;
     return {
       snap: true,
+      visibility: false,
       srcPhoto: "",
       srcThumb: "",
       uid: `get-photo-modal-${uid}`
     };
   },
 
+  mounted() {
+    navigator.mediaDevices
+      .enumerateDevices()
+      .then(devices => {
+        devices.forEach(device => {
+          if (device.kind == "videoinput") this.visibility = true;
+        });
+      })
+      .catch(err => {
+        this.visibility = false;
+      });
+  },
+
   methods: {
     init() {
-      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        this.video = document.getElementById("video");
-        this.eltPhoto = document.getElementById("photo");
-        this.eltThumb = document.getElementById("thumb");
-        this.ctxPhoto = this.eltPhoto.getContext("2d");
-        this.ctxThumb = this.eltThumb.getContext("2d");
-        navigator.mediaDevices
-          .getUserMedia({ video: { facingMode: "environment" } })
-          .then(stream => {
-            this.video.srcObject = stream;
-            this.video.play();
-          });
-        if (this.srcPhoto) {
-          var photo = new Image();
-          var thumb = new Image();
-          photo.onload = () => {
-            this.ctxPhoto.drawImage(photo, 0, 0);
-          };
-          thumb.onload = () => {
-            this.ctxThumb.drawImage(thumb, 0, 0);
-          };
-          photo.src = this.srcPhoto;
-          thumb.src = this.srcThumb;
-        }
+      this.video = document.getElementById("video");
+      this.eltPhoto = document.getElementById("photo");
+      this.eltThumb = document.getElementById("thumb");
+      this.ctxPhoto = this.eltPhoto.getContext("2d");
+      this.ctxThumb = this.eltThumb.getContext("2d");
+      navigator.mediaDevices
+        .getUserMedia({ video: { facingMode: "environment" } })
+        .then(stream => {
+          this.video.srcObject = stream;
+          this.video.play();
+        });
+      if (this.srcPhoto) {
+        var photo = new Image();
+        var thumb = new Image();
+        photo.onload = () => {
+          this.ctxPhoto.drawImage(photo, 0, 0);
+        };
+        thumb.onload = () => {
+          this.ctxThumb.drawImage(thumb, 0, 0);
+        };
+        photo.src = this.srcPhoto;
+        thumb.src = this.srcThumb;
       }
     },
     clear() {
