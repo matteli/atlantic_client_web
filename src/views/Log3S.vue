@@ -224,7 +224,7 @@ export default {
     },
 
     centerLabel: function(centerLabel) {
-      if (centerLabel) {
+      if (centerLabel && this.selectedLabel) {
         this.planeViewer.moveTo(this.selectedLabel.camera);
       }
     },

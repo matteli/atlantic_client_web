@@ -69,7 +69,7 @@ export default {
           if (device.kind == "videoinput") this.visibility = true;
         });
       })
-      .catch(err => {
+      .catch(() => {
         this.visibility = false;
       });
   },
