@@ -4,7 +4,7 @@ module.exports = {
         workboxOptions: {
             skipWaiting: true,
             runtimeCaching: [
-                {
+                /*{
                     urlPattern: /\/api\//,
                     handler: "staleWhileRevalidate",
                     options: {
@@ -13,7 +13,7 @@ module.exports = {
                             statuses: [0, 200],
                         },
                     }
-                },
+                },*/
                 {
                     urlPattern: /\/media\//,
                     handler: "cacheFirst",
