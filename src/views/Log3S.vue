@@ -499,6 +499,8 @@ export default {
   },
 
   mounted() {
+    this.viewsOptions = {};
+    this.viewsData = {};
     this.planeViewer.init(this.$refs["plane"]);
     var render = () => {
       requestAnimationFrame(render);
