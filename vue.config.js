@@ -4,16 +4,16 @@ module.exports = {
         workboxOptions: {
             skipWaiting: true,
             runtimeCaching: [
-                /*{
+                {
                     urlPattern: /\/api\//,
-                    handler: "staleWhileRevalidate",
+                    handler: "networkFirst",
                     options: {
                         cacheName: 'api-cache',
                         cacheableResponse: {
                             statuses: [0, 200],
                         },
                     }
-                },*/
+                },
                 {
                     urlPattern: /\/media\//,
                     handler: "cacheFirst",
