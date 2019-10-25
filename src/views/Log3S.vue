@@ -365,7 +365,7 @@ export default {
       Vue.axios.get("/planes/" + this.$route.params.registration).then(data => {
         this.plane = data.data;
         this.planeViewer.load(
-          "/media/" + this.plane.obj,
+          "/media/" + this.plane.gltf.gltf,
           this.$route.params.registration
         );
       });
