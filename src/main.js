@@ -8,11 +8,43 @@ import './registerServiceWorker'
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faHome, faLessThan, faGreaterThan, faVideo, faTimes, faCheck, faTrash, faSyncAlt, faTasks, faUser, faCommentAlt, faExclamationCircle, faCamera, faFile, faFileAlt, faSignInAlt, faSignOutAlt, faFileSignature, faBolt, faTools, faExclamationTriangle, faCheckSquare, faListAlt, faPlane } from '@fortawesome/free-solid-svg-icons';
-import { library } from '@fortawesome/fontawesome-svg-core';
+import {
+  FontAwesomeIcon
+} from '@fortawesome/vue-fontawesome'
+import {
+  faHome,
+  faLessThan,
+  faGreaterThan,
+  faVideo,
+  faTimes,
+  faCheck,
+  faTrash,
+  faSyncAlt,
+  faTasks,
+  faUser,
+  faCommentAlt,
+  faExclamationCircle,
+  faCamera,
+  faFile,
+  faFileAlt,
+  faSignInAlt,
+  faSignOutAlt,
+  faFileSignature,
+  faBolt,
+  faTools,
+  faExclamationTriangle,
+  faCheckSquare,
+  faListAlt,
+  faPlane
+} from '@fortawesome/free-solid-svg-icons';
+import {
+  faFirstdraft,
+} from '@fortawesome/free-brands-svg-icons';
+import {
+  library
+} from '@fortawesome/fontawesome-svg-core';
 
-library.add([faHome, faLessThan, faGreaterThan, faVideo, faTimes, faCheck, faTrash, faSyncAlt, faTasks, faUser, faCommentAlt, faExclamationCircle, faCamera, faFile, faFileAlt, faFileSignature, faBolt, faTools, faExclamationTriangle, faCheckSquare, faListAlt, faPlane, faSignInAlt, faSignOutAlt])
+library.add(faFirstdraft, faHome, faLessThan, faGreaterThan, faVideo, faTimes, faCheck, faTrash, faSyncAlt, faTasks, faUser, faCommentAlt, faExclamationCircle, faCamera, faFile, faFileAlt, faFileSignature, faBolt, faTools, faExclamationTriangle, faCheckSquare, faListAlt, faPlane, faSignInAlt, faSignOutAlt)
 Vue.use(BootstrapVue)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.config.productionTip = false;
@@ -27,5 +59,7 @@ Vue.use(VueAuth, {
 
 new Vue({
   router,
-  render: function (h) { return h(App) }
+  render: function (h) {
+    return h(App)
+  }
 }).$mount('#app')
