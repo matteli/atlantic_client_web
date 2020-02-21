@@ -1,34 +1,48 @@
 <template>
   <div>
-    <editor v-model="text" />
+    <ckeditor :editor="editor" v-model="text" :config="editorConfig"></ckeditor>
   </div>
 </template>
 
 <script>
 import Vue from "vue";
-import "tui-editor/dist/tui-editor.css";
-import "tui-editor/dist/tui-editor-contents.css";
-import "codemirror/lib/codemirror.css";
-import { Editor } from "@toast-ui/vue-editor";
+import CKEditor from "@ckeditor/ckeditor5-vue";
+import ClassicEditor from "@ckeditor/ckeditor5-editor-classic/src/classiceditor";
+import EssentialsPlugin from "@ckeditor/ckeditor5-essentials/src/essentials";
+import BoldPlugin from "@ckeditor/ckeditor5-basic-styles/src/bold";
+import ItalicPlugin from "@ckeditor/ckeditor5-basic-styles/src/italic";
+import LinkPlugin from "@ckeditor/ckeditor5-link/src/link";
+import ParagraphPlugin from "@ckeditor/ckeditor5-paragraph/src/paragraph";
+import CKSave from "../assets/js/CKSave.js";
 
 export default {
   name: "ManualDesigner",
   data() {
     return {
-      text: ""
+      text: "",
+      editor: ClassicEditor,
+      editorConfig: {
+        plugins: [
+          EssentialsPlugin,
+          BoldPlugin,
+          ItalicPlugin,
+          LinkPlugin,
+          ParagraphPlugin,
+          CKSave
+        ],
+
+        toolbar: {
+          items: ["bold", "italic", "link", "undo", "redo", "save"]
+        }
+      }
     };
   },
   components: {
-    editor: Editor
+    ckeditor: CKEditor.component
   },
   methods: {
-    addInstruction() {
-      Vue.axios
-        .post(
-          "/manuals/" + this.$route.params.id + "/instructions",
-          this.newInstruction.data
-        )
-        .then();
+    modifyManual() {
+      Vue.axios.post("/manuals/" + this.$route.params.id, this.text).then();
     }
   },
   mounted() {

@@ -35,7 +35,9 @@ import {
   faExclamationTriangle,
   faCheckSquare,
   faListAlt,
-  faPlane
+  faPlane,
+  faEdit,
+  faSave
 } from '@fortawesome/free-solid-svg-icons';
 import {
   faFirstdraft,
@@ -44,7 +46,7 @@ import {
   library
 } from '@fortawesome/fontawesome-svg-core';
 
-library.add(faFirstdraft, faHome, faLessThan, faGreaterThan, faVideo, faTimes, faCheck, faTrash, faSyncAlt, faTasks, faUser, faCommentAlt, faExclamationCircle, faCamera, faFile, faFileAlt, faFileSignature, faBolt, faTools, faExclamationTriangle, faCheckSquare, faListAlt, faPlane, faSignInAlt, faSignOutAlt)
+library.add(faSave, faEdit, faFirstdraft, faHome, faLessThan, faGreaterThan, faVideo, faTimes, faCheck, faTrash, faSyncAlt, faTasks, faUser, faCommentAlt, faExclamationCircle, faCamera, faFile, faFileAlt, faFileSignature, faBolt, faTools, faExclamationTriangle, faCheckSquare, faListAlt, faPlane, faSignInAlt, faSignOutAlt)
 Vue.use(BootstrapVue)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.config.productionTip = false;
