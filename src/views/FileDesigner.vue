@@ -16,7 +16,7 @@ import ParagraphPlugin from "@ckeditor/ckeditor5-paragraph/src/paragraph";
 import CKSave from "../assets/js/CKSave.js";
 
 export default {
-  name: "ManualDesigner",
+  name: "FileDesigner",
   data() {
     return {
       text: "",
@@ -41,14 +41,14 @@ export default {
     ckeditor: CKEditor.component
   },
   methods: {
-    modifyManual() {
-      Vue.axios.post("/manuals/" + this.$route.params.id, this.text).then();
+    modifyFile() {
+      Vue.axios.post("/files/" + this.$route.params.id, this.text).then();
     }
   },
   mounted() {
     if (typeof this.$route.params.id == "number") {
       Vue.axios
-        .get("/manuals/" + this.$route.params.id)
+        .get("/files/" + this.$route.params.id)
         .then(data => (this.text = data.data));
       //.catch(error => (this.newInstruction.error = error));
     }

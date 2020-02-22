@@ -2,20 +2,20 @@
   <div>
     <b-navbar type="light" variant="dark" fixed="top">
       <b-navbar-nav>
-        <add-manual v-on:add-manual="manual" class="mx-1" />
+        <add-file v-on:add-file="file" class="mx-1" />
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto">
         <login class="mx-1" />
       </b-navbar-nav>
     </b-navbar>
-    <b-table class="mt-5" striped small hover :items="manuals" :fields="fields">
+    <b-table class="mt-5" striped small hover :items="files" :fields="fields">
       <template v-slot:cell(state)="row">
         <b-badge :variant="colorState(row.item['state'])">
           <font-awesome-icon :icon="iconState(row.item['state'])" />
         </b-badge>
       </template>
       <template v-slot:cell(action)="row">
-        <b-button variant="primary" size="sm" @click="manual(row.item['id'])">
+        <b-button variant="primary" size="sm" @click="file(row.item['id'])">
           <font-awesome-icon icon="edit" />
         </b-button>
       </template>
@@ -25,11 +25,11 @@
 
 <script>
 import Vue from "vue";
-import AddManual from "@/components/AddManual.vue";
+import AddFile from "@/components/AddFile.vue";
 import Login from "@/components/Login.vue";
 
 export default {
-  name: "ManualList",
+  name: "FileList",
   data() {
     return {
       fields: [
@@ -55,11 +55,11 @@ export default {
           sortable: false
         }
       ],
-      manuals: []
+      files: []
     };
   },
   components: {
-    AddManual,
+    AddFile,
     Login
   },
   methods: {
@@ -81,14 +81,14 @@ export default {
         return ["fas", "file-signature"];
       }
     },
-    manual(id) {
-      Vue.router.push({ name: "manualdesigner", params: { id: id } });
+    file(id) {
+      Vue.router.push({ name: "filedesigner", params: { id: id } });
     }
   },
   computed: {},
   mounted() {
-    Vue.axios.get("/manuals").then(data => {
-      this.manuals = data.data;
+    Vue.axios.get("/files").then(data => {
+      this.files = data.data;
     });
   }
 };
