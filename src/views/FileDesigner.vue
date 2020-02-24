@@ -42,16 +42,21 @@ export default {
   },
   methods: {
     modifyFile() {
-      Vue.axios.post("/files/" + this.$route.params.id, this.text).then();
+      //Vue.axios.post("/files/" + this.$route.params.id, this.text).then();
     }
   },
   mounted() {
-    if (typeof this.$route.params.id == "number") {
-      Vue.axios
-        .get("/files/" + this.$route.params.id)
-        .then(data => (this.text = data.data));
-      //.catch(error => (this.newInstruction.error = error));
-    }
+    Vue.axios
+      .get(
+        "/docs/" +
+          this.$route.params.plane_model +
+          "/planes/" +
+          this.$route.params.plane +
+          "/files/" +
+          this.$route.params.name
+      )
+      .then(data => (this.text = data.data));
+    //.catch(error => (this.newInstruction.error = error));
   }
 };
 </script>

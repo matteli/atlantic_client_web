@@ -2,6 +2,13 @@
   <div>
     <b-navbar type="light" variant="dark" fixed="top">
       <b-navbar-nav>
+        <b-form-select v-model="model_plane_selected" :options="model_planes" class="mx-1"></b-form-select>
+        <b-form-select
+          v-model="plane_selected"
+          :options="planes"
+          :disabled="isDisabled"
+          class="mx-1"
+        ></b-form-select>
         <add-file v-on:add-file="file" class="mx-1" />
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto">
@@ -15,7 +22,7 @@
         </b-badge>
       </template>
       <template v-slot:cell(action)="row">
-        <b-button variant="primary" size="sm" @click="file(row.item['id'])">
+        <b-button variant="primary" size="sm" @click="file(row.item['title'])">
           <font-awesome-icon icon="edit" />
         </b-button>
       </template>
@@ -34,11 +41,6 @@ export default {
     return {
       fields: [
         {
-          key: "id",
-          sortable: true,
-          label: "#"
-        },
-        {
           key: "title",
           sortable: true
         },
@@ -55,7 +57,12 @@ export default {
           sortable: false
         }
       ],
-      files: []
+      files: [],
+      model_planes: [],
+      model_plane_selected: null,
+      planes: [],
+      plane_selected: null,
+      isDisabled: true
     };
   },
   components: {
@@ -81,14 +88,74 @@ export default {
         return ["fas", "file-signature"];
       }
     },
-    file(id) {
-      Vue.router.push({ name: "filedesigner", params: { id: id } });
+    file(title) {
+      const name = title.replace(/.(?!.*\.)/, "-");
+      Vue.router.push({
+        name: "Filedesigner",
+        params: {
+          name: name,
+          plane_model: this.model_plane_selected,
+          plane: this.plane_selected
+        }
+      });
+    },
+    clear_planes_options() {
+      this.planes = [{ value: null, text: "-- Select a plane (MSN) --" }];
+      this.plane_selected = null;
+    }
+  },
+  watch: {
+    plane_selected: function(val) {
+      if (val) {
+        this.files = [];
+        Vue.axios
+          .get(
+            "/docs/" + this.model_plane_selected + "/planes/" + val + "/files"
+          )
+          .then(data => {
+            for (var mp in data.data) {
+              var file = {
+                hash: data.data[mp].hash,
+                title: data.data[mp].title,
+                editor: data.data[mp].editor,
+                state: data.data[mp].state
+              };
+              this.files.push(file);
+            }
+          });
+      }
+    },
+    model_plane_selected: function(val) {
+      if (val) {
+        this.clear_planes_options();
+        Vue.axios.get("/docs/" + val + "/planes").then(data => {
+          for (var mp in data.data) {
+            //console.log(data.data[mp]["model_plane"]);
+            this.planes.push({
+              value: data.data[mp],
+              text: data.data[mp]
+            });
+          }
+          this.isDisabled = false;
+        });
+      } else {
+        this.clear_planes_options();
+        this.isDisabled = true;
+      }
     }
   },
   computed: {},
   mounted() {
-    Vue.axios.get("/files").then(data => {
-      this.files = data.data;
+    this.model_planes = [{ value: null, text: "-- Select a model plane --" }];
+    Vue.axios.get("/docs").then(data => {
+      for (var mp in data.data) {
+        //console.log(data.data[mp]["model_plane"]);
+        this.model_planes.push({
+          value: data.data[mp]["slug_model_plane"],
+          text: data.data[mp]["model_plane"]
+        });
+      }
+      this.clear_planes_options();
     });
   }
 };

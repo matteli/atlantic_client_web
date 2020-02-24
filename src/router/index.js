@@ -2,8 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Log3S from '../views/Log3S.vue'
-import ManualDesigner from '../views/ManualDesigner.vue'
-import ManualList from '../views/ManualList.vue'
+import FileDesigner from '../views/FileDesigner.vue'
+import FileList from '../views/FileList.vue'
 
 Vue.use(VueRouter)
 
@@ -18,14 +18,14 @@ const routes = [{
     component: Log3S
 },
 {
-    path: '/manuallist',
-    name: 'manuallist',
-    component: ManualList
+    path: '/docs',
+    name: 'Filelist',
+    component: FileList
 },
 {
-    path: '/manualdesigner/:id',
-    name: 'manualdesigner',
-    component: ManualDesigner
+    path: '/docs/:plane_model/planes/:plane/files/:name',
+    name: 'Filedesigner',
+    component: FileDesigner
 },
 
 ]
