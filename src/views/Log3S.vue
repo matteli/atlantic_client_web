@@ -284,30 +284,32 @@ export default {
     },
 
     drawLabels() {
-      var selectedLabelLoaded = false;
-      this.planeViewer.unvisibleLabels();
-      this.labels.forEach(label => {
-        var color = this.getColorLabel(label);
-        if (color != "black") {
-          this.planeViewer.visibleLabel(label.id);
-          if (!this.planeViewer.changeColorLabel(label.id, color)) {
-            this.planeViewer.drawLabel(
-              label.id,
-              label.x,
-              label.y,
-              label.z,
-              color
-            );
+      if (this.labels.length) {
+        var selectedLabelLoaded = false;
+        this.planeViewer.unvisibleLabels();
+        this.labels.forEach(label => {
+          var color = this.getColorLabel(label);
+          if (color != "black") {
+            this.planeViewer.visibleLabel(label.id);
+            if (!this.planeViewer.changeColorLabel(label.id, color)) {
+              this.planeViewer.drawLabel(
+                label.id,
+                label.x,
+                label.y,
+                label.z,
+                color
+              );
+            }
+            if (this.selectedLabel == label) selectedLabelLoaded = true;
           }
-          if (this.selectedLabel == label) selectedLabelLoaded = true;
+        });
+        if (selectedLabelLoaded)
+          this.planeViewer.selectLabel(this.selectedLabel.id);
+        else {
+          if (this.selectedLabel)
+            this.planeViewer.deSelectLabel(this.selectedLabel.id);
+          this.selectedLabel = null;
         }
-      });
-      if (selectedLabelLoaded)
-        this.planeViewer.selectLabel(this.selectedLabel.id);
-      else {
-        if (this.selectedLabel)
-          this.planeViewer.deSelectLabel(this.selectedLabel.id);
-        this.selectedLabel = null;
       }
     },
 
@@ -324,8 +326,8 @@ export default {
           else if (label.id > maxLabel.id) maxLabel = label;
           if (
             this.selectedLabel &&
-            (this.selectedLabel.id - label.id > 0 &&
-              (!delta || (delta && this.selectedLabel.id - label.id < delta)))
+            this.selectedLabel.id - label.id > 0 &&
+            (!delta || (delta && this.selectedLabel.id - label.id < delta))
           ) {
             previousLabel = label;
             delta = this.selectedLabel.id - label.id;
@@ -349,8 +351,8 @@ export default {
           else if (label.id < minLabel.id) minLabel = label;
           if (
             this.selectedLabel &&
-            (label.id - this.selectedLabel.id > 0 &&
-              (!delta || (delta && label.id - this.selectedLabel.id < delta)))
+            label.id - this.selectedLabel.id > 0 &&
+            (!delta || (delta && label.id - this.selectedLabel.id < delta))
           ) {
             nextLabel = label;
             delta = label.id - this.selectedLabel.id;
@@ -365,7 +367,7 @@ export default {
       Vue.axios.get("/planes/" + this.$route.params.registration).then(data => {
         this.plane = data.data;
         this.planeViewer.load(
-          "/media/" + this.plane.gltf.gltf,
+          "/media/" + this.plane.modelPlane.gltf,
           this.$route.params.registration
         );
       });

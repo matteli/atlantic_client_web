@@ -1,48 +1,64 @@
 <template>
   <div>
-    <ckeditor :editor="editor" v-model="text" :config="editorConfig"></ckeditor>
+    <b-navbar type="light" variant="dark" sticky>
+      <b-navbar-nav>
+        <b-button variant="primary" size="sm" @click="commit()">
+          <font-awesome-icon icon="save" />
+        </b-button>
+      </b-navbar-nav>
+      <b-navbar-nav class="ml-auto">
+        <login class="mx-1" />
+      </b-navbar-nav>
+    </b-navbar>
+
+    <div v-html="rawHtml" @focusout="edit"></div>
   </div>
 </template>
 
 <script>
 import Vue from "vue";
-import CKEditor from "@ckeditor/ckeditor5-vue";
-import ClassicEditor from "@ckeditor/ckeditor5-editor-classic/src/classiceditor";
-import EssentialsPlugin from "@ckeditor/ckeditor5-essentials/src/essentials";
-import BoldPlugin from "@ckeditor/ckeditor5-basic-styles/src/bold";
-import ItalicPlugin from "@ckeditor/ckeditor5-basic-styles/src/italic";
-import LinkPlugin from "@ckeditor/ckeditor5-link/src/link";
-import ParagraphPlugin from "@ckeditor/ckeditor5-paragraph/src/paragraph";
-import CKSave from "../assets/js/CKSave.js";
+import { testxslt } from "@/assets/js/xslt/test.js";
+import Login from "@/components/Login.vue";
 
 export default {
   name: "FileDesigner",
   data() {
     return {
-      text: "",
-      editor: ClassicEditor,
-      editorConfig: {
-        plugins: [
-          EssentialsPlugin,
-          BoldPlugin,
-          ItalicPlugin,
-          LinkPlugin,
-          ParagraphPlugin,
-          CKSave
-        ],
-
-        toolbar: {
-          items: ["bold", "italic", "link", "undo", "redo", "save"]
-        }
-      }
+      rawHtml: "",
+      docxml: null
     };
   },
-  components: {
-    ckeditor: CKEditor.component
-  },
+  components: { Login },
   methods: {
-    modifyFile() {
-      //Vue.axios.post("/files/" + this.$route.params.id, this.text).then();
+    edit(evt) {
+      const path = evt["target"]["attributes"]["data-path"]["value"];
+      const text = evt["target"]["innerHTML"];
+      //console.log(evt);
+      const result = this.docxml.evaluate(
+        path,
+        this.docxml,
+        null,
+        XPathResult.FIRST_ORDERED_NODE_TYPE,
+        null
+      );
+      //console.log(result.singleNodeValue);
+      result.singleNodeValue.textContent = text;
+      console.log(this.docxml);
+    },
+    commit() {
+      const serializer = new XMLSerializer();
+      const doc = serializer.serializeToString(this.docxml);
+      Vue.axios.put(
+        "/docs/" +
+          this.$route.params.plane_model +
+          "/planes/" +
+          this.$route.params.plane +
+          "/files/" +
+          this.$route.params.name,
+        {
+          content: doc
+        }
+      );
     }
   },
   mounted() {
@@ -55,8 +71,18 @@ export default {
           "/files/" +
           this.$route.params.name
       )
-      .then(data => (this.text = data.data));
-    //.catch(error => (this.newInstruction.error = error));
+      .then(data => {
+        const xsltProcessor = new XSLTProcessor();
+        const testxsltxml = new DOMParser().parseFromString(
+          testxslt,
+          "text/xml"
+        );
+        xsltProcessor.importStylesheet(testxsltxml);
+        const doc = data.data;
+        this.docxml = new DOMParser().parseFromString(doc, "text/xml");
+        const html = xsltProcessor.transformToFragment(this.docxml, document);
+        this.rawHtml = html["firstChild"]["innerHTML"];
+      });
   }
 };
 </script>

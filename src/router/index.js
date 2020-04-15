@@ -23,6 +23,18 @@ const routes = [{
     component: FileList
 },
 {
+    path: '/docs/:model',
+    name: 'FilelistModel',
+    component: FileList,
+    props: true
+},
+{
+    path: '/docs/:model/planes/:plane',
+    name: 'FilelistPlane',
+    component: FileList,
+    props: true
+},
+{
     path: '/docs/:plane_model/planes/:plane/files/:name',
     name: 'Filedesigner',
     component: FileDesigner
