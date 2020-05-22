@@ -2,14 +2,21 @@
   <div>
     <b-navbar type="light" variant="dark" fixed="top">
       <b-navbar-nav>
-        <b-form-select v-model="model_selected" :options="models" class="mx-1"></b-form-select>
+        <b-form-select v-model="modelSelected" :options="models" class="mx-1"></b-form-select>
         <b-form-select
-          v-model="plane_selected"
-          :options="planes"
-          :disabled="isDisabled"
+          v-model="referenceSelected"
+          :options="references"
+          :disabled="!modelIsSelected"
           class="mx-1"
         ></b-form-select>
-        <add-file v-on:add-file="file" class="mx-1" />
+        <add-file
+          :disabled="!referenceIsSelected"
+          :model="modelSelected"
+          :reference="referenceSelected"
+          :files="files"
+          v-on:add-file="openFile"
+          class="mx-1"
+        />
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto">
         <login class="mx-1" />
@@ -22,7 +29,12 @@
         </b-badge>
       </template>
       <template v-slot:cell(action)="row">
-        <b-button variant="primary" size="sm" @click="file(row.item['filename'])">
+        <b-button
+          v-if="$auth.check()"
+          variant="primary"
+          size="sm"
+          @click="openFile(row.item['filename'])"
+        >
           <font-awesome-icon icon="edit" />
         </b-button>
       </template>
@@ -59,19 +71,19 @@ export default {
       ],
       files: [],
       models: [],
-      planes: [],
-      model_selected: this.model,
-      plane_selected: this.plane
+      references: [],
+      modelSelected: this.model,
+      referenceSelected: this.reference
     };
   },
   props: {
     model: {
       type: String,
-      default: null
+      default: ""
     },
-    plane: {
+    reference: {
       type: String,
-      default: null
+      default: ""
     }
   },
   components: {
@@ -97,19 +109,19 @@ export default {
         return ["fas", "file-signature"];
       }
     },
-    file(filename) {
-      const name = filename.replace(/.(?!.*\.)/, "-");
+    openFile(filename) {
+      const name = filename.replace(/.(?!.*\.)/, "-").toLowerCase();
       Vue.router.push({
-        name: "Filedesigner",
+        name: "FileEditor",
         params: {
           name: name,
-          plane_model: this.model_selected,
-          plane: this.plane_selected
+          model: this.modelSelected,
+          reference: this.referenceSelected
         }
       });
     },
-    get_models() {
-      let model = [{ value: null, text: "-- Select a model plane --" }];
+    getModels() {
+      let model = [{ value: "", text: "-- Select a model plane --" }];
       Vue.axios.get("/docs").then(data => {
         for (let d in data.data) {
           model.push({
@@ -120,30 +132,29 @@ export default {
       });
       return model;
     },
-    get_planes(model) {
-      let planes = [{ value: null, text: "-- Select a plane (MSN) --" }];
-      Vue.axios.get("/docs/" + model + "/planes").then(data => {
+    getRefs(model) {
+      let references = [{ value: "", text: "-- Select a reference --" }];
+      Vue.axios.get("/docs/" + model + "/references").then(data => {
         for (let d in data.data) {
-          planes.push({
+          references.push({
             value: data.data[d],
             text: data.data[d]
           });
         }
       });
-      return planes;
+      return references;
     },
-    get_files(model, plane) {
+    getFiles(model, reference) {
       let files = [];
       Vue.axios
-        .get("/docs/" + model + "/planes/" + plane + "/files")
+        .get("/docs/" + model + "/references/" + reference + "/files")
         .then(data => {
-          console.log(data);
           for (let d in data.data) {
             let file = {
               hash: data.data[d].hash,
-              filename: data.data[d].filename,
-              editor: data.data[d].editor,
-              state: data.data[d].state
+              filename: data.data[d]["filename"],
+              editor: data.data[d]["editor"],
+              state: data.data[d]["state"]
             };
             files.push(file);
           }
@@ -153,29 +164,29 @@ export default {
   },
 
   watch: {
-    plane_selected: function(plane) {
-      if (plane) {
-        this.files = this.get_files(this.model_selected, plane);
+    referenceSelected: function(reference) {
+      if (reference) {
+        this.files = this.getFiles(this.modelSelected, reference);
         Vue.router.push({
-          name: "FilelistPlane",
+          name: "FilelistRef",
           params: {
-            model: this.model_selected,
-            plane: plane
+            model: this.modelSelected,
+            reference: reference
           }
         });
       } else {
         Vue.router.push({
           name: "FilelistModel",
           params: {
-            model: this.model_selected
+            model: this.modelSelected
           }
         });
         this.files = [];
       }
     },
-    model_selected: function(model) {
+    modelSelected: function(model) {
       if (model) {
-        this.planes = this.get_planes(model);
+        this.references = this.getRefs(model);
         Vue.router.push({
           name: "FilelistModel",
           params: {
@@ -183,8 +194,8 @@ export default {
           }
         });
       } else {
-        this.planes = [{ value: null, text: "-- Select a plane (MSN) --" }];
-        this.plane_selected = null;
+        this.references = [{ value: "", text: "-- Select a reference --" }];
+        this.referenceSelected = "";
         Vue.router.push({
           name: "Filelist"
         });
@@ -192,20 +203,24 @@ export default {
     }
   },
   computed: {
-    isDisabled: function() {
-      if (this.model_selected) return false;
-      else return true;
+    modelIsSelected: function() {
+      if (this.modelSelected) return true;
+      return false;
+    },
+    referenceIsSelected: function() {
+      if (this.referenceSelected) return true;
+      return false;
     }
   },
   mounted() {
-    this.models = this.get_models();
-    if (this.model_selected) {
-      this.planes = this.get_planes(this.model_selected);
-      if (this.plane_selected) {
-        this.files = this.get_files(this.model_selected, this.plane_selected);
+    this.models = this.getModels();
+    if (this.modelSelected) {
+      this.references = this.getRefs(this.modelSelected);
+      if (this.referenceSelected) {
+        this.files = this.getFiles(this.modelSelected, this.referenceSelected);
       }
     } else {
-      this.planes = [{ value: null, text: "-- Select a plane (MSN) --" }];
+      this.references = [{ value: "", text: "-- Select a reference --" }];
     }
   }
 };

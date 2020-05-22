@@ -5,7 +5,7 @@
       <nature-badge v-bind:nature="page.nature" />
       <progress-badge class="ml-1" v-bind:progress="page.progress" />
     </h4>
-    <h6>{{ ATA_DESC[page.ATA] }}</h6>
+    <h6>{{ optionsSystemCode[page.ATA] }}</h6>
     <comment
       v-for="comment in comments"
       v-bind:key="comment.edited"
@@ -18,7 +18,7 @@
     <b-form v-if="$auth.check()">
       <b-input-group>
         <b-input-group-prepend>
-          <get-photo ref="get_photo" v-on:get-photo="addPhoto" />
+          <get-photo ref="getPhoto" v-on:get-photo="addPhoto" />
         </b-input-group-prepend>
         <b-form-input id="textarea" v-model="data.text" placeholder="Enter comment..." />
         <b-input-group-append>
@@ -46,7 +46,7 @@ import ProgressButton from "@/components/ProgressButton.vue";
 import NatureBadge from "@/components/NatureBadge.vue";
 import Comment from "@/components/Comment.vue";
 import GetPhoto from "@/components/GetPhoto.vue";
-import { ATA_DESC } from "@/assets/js/Const.js";
+import { systemCode } from "@/assets/js/SystemCode.js";
 
 export default {
   name: "ViewPage",
@@ -54,7 +54,7 @@ export default {
     return {
       page: {},
       comments: [],
-      ATA_DESC: ATA_DESC,
+      optionsSystemCode: systemCode,
       data: {
         text: "",
         progress: "",
@@ -85,7 +85,7 @@ export default {
       this.data.text = "";
       this.data.progress = "";
       this.data.image = "";
-      if (this.$auth.check()) this.$refs.get_photo.clear();
+      if (this.$auth.check()) this.$refs.getPhoto.clear();
     },
     comment(progress) {
       this.data.progress = progress;

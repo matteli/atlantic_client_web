@@ -11,7 +11,7 @@
     </b-button>
     <b-modal
       id="add-page-modal"
-      ref="add_page_modal"
+      ref="addPageModal"
       title="Add log page"
       @shown="clear"
       v-bind:hide-footer="true"
@@ -67,7 +67,7 @@
           />
         </b-form-group>
         <b-form-group label-for="get-photo-add-page">
-          <get-photo id="get-photo-add-page" ref="get_photo_add_page" v-on:get-photo="addPhoto" />
+          <get-photo id="get-photo-add-page" ref="getPhotoAddPage" v-on:get-photo="addPhoto" />
         </b-form-group>
         <b-button type="submit" variant="primary">Submit</b-button>
         <b-button type="button" class="ml-2" variant="warning" @click.prevent="onCancel">Cancel</b-button>
@@ -79,7 +79,7 @@
 
 <script>
 import Vue from "vue";
-import { ATA_DESC } from "@/assets/js/Const.js";
+import { systemCode } from "@/assets/js/SystemCode.js";
 import GetPhoto from "@/components/GetPhoto.vue";
 
 export default {
@@ -99,7 +99,7 @@ export default {
         nature: "O",
         tour: 0
       },
-      optionsAta: ATA_DESC,
+      optionsAta: systemCode,
       error: null,
       show: true
     };
@@ -126,13 +126,13 @@ export default {
       this.data.comments.image = "";
       this.data.nature = "O";
       this.data.tour = 0;
-      this.$refs.get_photo_add_page.clear();
+      this.$refs.getPhotoAddPage.clear();
     },
     addPhoto(img) {
       this.data.comments.image = img;
     },
     onCancel() {
-      this.$refs.add_page_modal.hide();
+      this.$refs.addPageModal.hide();
     },
     onSubmit(evt) {
       evt.preventDefault();
@@ -149,7 +149,7 @@ export default {
           this.$nextTick(() => {
             this.clear();
             this.$emit("add-page", resp);
-            this.$refs.add_page_modal.hide();
+            this.$refs.addPageModal.hide();
           });
         })
         .catch(err => {
