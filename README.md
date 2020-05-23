@@ -4,7 +4,7 @@ This program is the client web side of the Atlantic app. It needs to have the se
 
 ## Installation
 
-1. Copy and extract the release in a directory
+1. Copy and extract the release in a directory serve by apache2 (see server side of Atlantic)
 2. In the file app.xxxxxx.js in js directory, search for "API_URL" and replace by the url of your server side of Atlantic.
 
 ## Development
