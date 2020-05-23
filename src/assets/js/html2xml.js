@@ -1,10 +1,19 @@
-export default function (html) {
-  const xml = document.createDocumentFragment();
+export default function (html, xmlInit) {
+  const xml = new DOMParser().parseFromString(xmlInit, "text/xml");
+  console.log(xml);
+  const contentNode = xml.getElementsByTagName("content");
+  while (contentNode[0].lastElementChild) {
+    contentNode[0].removeChild(contentNode[0].lastElementChild);
+  }
   const treeXml = document.createTreeWalker(xml);
-  const xmlElmt = document.createElementNS("", "dmodule");
-  treeXml.currentNode.appendChild(xmlElmt);
-  treeXml.lastChild();
+  treeXml.firstChild();
+  treeXml.firstChild();
+  do {
+    if (treeXml.currentNode.nodeName == "content") break;
+  } while (treeXml.nextSibling());
+
   walk(html.firstElementChild);
+
   function walk(node) {
     if (node.nodeType == 1) {
       const xmlElmt = document.createElementNS("", node.className);
@@ -23,15 +32,7 @@ export default function (html) {
     }
     return
   }
-  //console.log(xml);
   const s = new XMLSerializer();
   const xmlString = s.serializeToString(xml);
-  const xmlStringF0 = '<?xml version="1.0" encoding="UTF-8"?>' + xmlString;
-
-  function breakLine(match, offset, string) {
-    return (match.substring(0, 1) + "\n" + match.substring(1, 2))
-  }
-  const xmlStringF1 = xmlStringF0.replace(/>/g, "$&\n");
-  const xmlStringF2 = xmlStringF1.replace(/.</g, breakLine);
-  return xmlStringF2;
+  return xmlString;
 }

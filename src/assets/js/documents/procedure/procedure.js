@@ -4,9 +4,6 @@ import {
 
 export const procedureSchema = new Schema({
   nodes: {
-    dmodule: {
-      content: "content"
-    },
     content: {
       content: "procedure",
       toDOM(node) {
@@ -116,5 +113,5 @@ export const procedureSchema = new Schema({
       inline: true
     }
   },
-  topNode: "dmodule"
+  topNode: "content"
 });

@@ -15,7 +15,7 @@
       </b-navbar-nav>
     </b-navbar>
 
-    <div ref="editor"></div>
+    <div id="editor" ref="editor"></div>
   </div>
 </template>
 
@@ -39,34 +39,68 @@ export default {
         mtype: "RAW",
         xslt: "",
         state: "D",
-        hidden: "false"
+        hidden: "false",
+        blob_id: ""
       },
+      xsltList: { xpro: procedureXslt },
+      schemaList: { xpro: procedureSchema },
       commit: "",
+      content: "",
       view: null
     };
   },
   components: { Login },
   methods: {
     save() {
-      const xml = html2xml(this.view.dom);
+      const xml = html2xml(this.view.dom, this.content);
       console.log(xml);
-      Vue.axios.put(
-        "/docs/" +
-          this.$route.params.model +
-          "/references/" +
-          this.$route.params.reference +
-          "/files/" +
-          this.$route.params.name,
-        {
-          content: xml,
-          meta: this.meta
+      Vue.axios
+        .put(
+          "/docs/" +
+            this.$route.params.model +
+            "/references/" +
+            this.$route.params.reference +
+            "/files/" +
+            this.$route.params.name,
+          {
+            content: xml,
+            commit: this.commit,
+            meta: this.meta
+          }
+        )
+        .then(data => {
+          this.meta = data.data["meta"];
+          this.commit = data.data["commit"];
+          this.content = data.data["content"];
+          this.xmlInEditor();
+        });
+    },
+    xmlInEditor() {
+      if (this.meta.type == "xpro") {
+        const xsltProcessor = new XSLTProcessor();
+        const xsltDom = new DOMParser().parseFromString(
+          this.xsltList[this.meta.type],
+          "text/xml"
+        );
+        xsltProcessor.importStylesheet(xsltDom);
+        const xml = new DOMParser().parseFromString(this.content, "text/xml");
+        const html = xsltProcessor.transformToFragment(xml, document);
+        const dParser = PMDOMParser.fromSchema(this.schemaList[this.meta.type]);
+        const state = EditorState.create({
+          schema: this.schemaList[this.meta.type],
+          doc: dParser.parse(html),
+          plugins: [keymap(baseKeymap)]
+        });
+        while (this.$refs.editor.firstChild) {
+          this.$refs.editor.firstChild.remove();
         }
-      );
+        this.view = new EditorView(this.$refs.editor, { state });
+      } else {
+        //RAW
+      }
     }
   },
   mounted() {
-    const xsltList = { xpro: procedureXslt };
-    const schemaList = { xpro: procedureSchema };
     Vue.axios
       .get(
         "/docs/" +
@@ -77,29 +111,10 @@ export default {
           this.$route.params.name
       )
       .then(data => {
-        console.log(data.data);
         this.meta = data.data["meta"];
         this.commit = data.data["commit"];
-        const content = data.data["content"];
-        if (this.meta.type == "xpro") {
-          const xsltProcessor = new XSLTProcessor();
-          const xsltDom = new DOMParser().parseFromString(
-            xsltList[this.meta.type],
-            "text/xml"
-          );
-          xsltProcessor.importStylesheet(xsltDom);
-          const xml = new DOMParser().parseFromString(content, "text/xml");
-          const html = xsltProcessor.transformToFragment(xml, document);
-          const dParser = PMDOMParser.fromSchema(schemaList[this.meta.type]);
-          const state = EditorState.create({
-            schema: schemaList[this.meta.type],
-            doc: dParser.parse(html),
-            plugins: [keymap(baseKeymap)]
-          });
-          this.view = new EditorView(this.$refs.editor, { state });
-        } else {
-          //RAW
-        }
+        this.content = data.data["content"];
+        this.xmlInEditor();
       });
   }
 };

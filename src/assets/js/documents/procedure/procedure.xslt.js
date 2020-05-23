@@ -1,30 +1,34 @@
 export const procedureXslt = '\
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">\
   <xsl:output method="html"/>\
-  <xsl:template match="/">\
-    <div>\
-      <xsl:for-each select="dmodule/content">\
-        <div class="content">\
-          <xsl:for-each select="procedure">\
-            <div class="procedure">\
-              <xsl:for-each select="mainProcedure">\
-                <div class="mainProcedure">\
-                  <xsl:for-each select="proceduralStep">\
-                    <div class="proceduralStep">\
-                      <xsl:for-each select="para">\
-                        <xsl:element name="p">\
-                          <xsl:attribute name="class">para</xsl:attribute>\
-                          <xsl:value-of select="text()"/>\
-                        </xsl:element>\
-                      </xsl:for-each>\
-                    </div>\
-                  </xsl:for-each>\
-                </div>\
-              </xsl:for-each>\
-            </div>\
-          </xsl:for-each>\
-        </div>\
-      </xsl:for-each>\
+  \
+  <xsl:template match="/dmodule/content">\
+    <div class="content">\
+      <xsl:apply-templates select="procedure" />\
     </div>\
+  </xsl:template>\
+  \
+  <xsl:template match="procedure">\
+    <div class="procedure">\
+      <xsl:apply-templates select="mainProcedure" />\
+    </div>\
+  </xsl:template>\
+  \
+  <xsl:template match="mainProcedure">\
+    <div class="mainProcedure">\
+      <xsl:apply-templates select="proceduralStep" />\
+    </div>\
+  </xsl:template>\
+  \
+  <xsl:template match="proceduralStep">\
+    <div class="proceduralStep">\
+      <xsl:apply-templates select="para" />\
+    </div>\
+  </xsl:template>\
+  \
+  <xsl:template match="para">\
+    <p class="para">\
+      <xsl:value-of select="text()" />\
+    </p>\
   </xsl:template>\
 </xsl:stylesheet>'
