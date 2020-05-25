@@ -1,8 +1,29 @@
 import {
-  Schema
+  EditorState
+} from "prosemirror-state";
+import {
+  Schema,
+  DOMParser as PMDOMParser
 } from "prosemirror-model";
+import {
+  keymap
+} from "prosemirror-keymap";
+import {
+  baseKeymap,
+  setBlockType
+} from "prosemirror-commands";
+import {
+  undo,
+  redo,
+  history
+} from "prosemirror-history";
 
-export const procedureSchema = new Schema({
+
+import {
+  procedureXslt
+} from "@/assets/js/documents/procedure/procedure.xslt.js";
+
+const schema = new Schema({
   nodes: {
     content: {
       content: "procedure",
@@ -115,3 +136,31 @@ export const procedureSchema = new Schema({
   },
   topNode: "content"
 });
+
+
+export class Procedure {
+  constructor(content) {
+    const xsltProcessor = new XSLTProcessor();
+    const xsltDom = new DOMParser().parseFromString(
+      procedureXslt,
+      "text/xml"
+    );
+    xsltProcessor.importStylesheet(xsltDom);
+    const xml = new DOMParser().parseFromString(content, "text/xml");
+    const html = xsltProcessor.transformToFragment(xml, document);
+    const dParser = PMDOMParser.fromSchema(schema);
+
+    this.state = EditorState.create({
+      schema: schema,
+      doc: dParser.parse(html),
+      plugins: [
+        history(),
+        keymap({
+          "Mod-z": undo,
+          "Mod-y": redo
+        }),
+        keymap(baseKeymap)
+      ]
+    });
+  }
+}

@@ -2,6 +2,9 @@ const path = require('path');
 
 module.exports = {
     publicPath: '/',
+    configureWebpack: {
+        devtool: 'source-map'
+    },
     pwa: {
         name: "Atlantic",
         theme_color: "#007bff",
@@ -12,8 +15,7 @@ module.exports = {
             display: "standalone",
             background_color: "#000000",
             orientation: "landscape",
-            icons: [
-                {
+            icons: [{
                     "src": "./img/icons/android-chrome-192x192.png",
                     "sizes": "192x192",
                     "type": "image/png"
@@ -27,8 +29,7 @@ module.exports = {
         },
         workboxOptions: {
             skipWaiting: true,
-            runtimeCaching: [
-                {
+            runtimeCaching: [{
                     urlPattern: /\/api\//,
                     handler: "networkFirst",
                     options: {

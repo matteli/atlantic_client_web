@@ -1,16 +1,15 @@
 export default function (html, xmlInit) {
   const xml = new DOMParser().parseFromString(xmlInit, "text/xml");
-  console.log(xml);
-  const contentNode = xml.getElementsByTagName("content");
-  while (contentNode[0].lastElementChild) {
-    contentNode[0].removeChild(contentNode[0].lastElementChild);
-  }
   const treeXml = document.createTreeWalker(xml);
   treeXml.firstChild();
   treeXml.firstChild();
   do {
     if (treeXml.currentNode.nodeName == "content") break;
   } while (treeXml.nextSibling());
+
+  while (treeXml.currentNode.firstChild) {
+    treeXml.currentNode.firstChild.remove();
+  }
 
   walk(html.firstElementChild);
 
@@ -32,6 +31,7 @@ export default function (html, xmlInit) {
     }
     return
   }
+
   const s = new XMLSerializer();
   const xmlString = s.serializeToString(xml);
   return xmlString;

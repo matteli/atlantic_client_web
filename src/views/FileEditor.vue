@@ -21,15 +21,12 @@
 
 <script>
 import Vue from "vue";
-import { procedureXslt } from "@/assets/js/documents/procedure/procedure.xslt.js";
-import { procedureSchema } from "@/assets/js/documents/procedure/procedure.js";
 import html2xml from "@/assets/js/html2xml.js";
-import { EditorState } from "prosemirror-state";
-import { EditorView } from "prosemirror-view";
-import { DOMParser as PMDOMParser } from "prosemirror-model";
-import { keymap } from "prosemirror-keymap";
-import { baseKeymap } from "prosemirror-commands";
 import Login from "@/components/Login.vue";
+
+import { EditorView } from "prosemirror-view";
+
+import { Procedure } from "@/assets/js/documents/procedure/procedure.js";
 
 export default {
   name: "FileEditor",
@@ -42,8 +39,6 @@ export default {
         hidden: "false",
         blob_id: ""
       },
-      xsltList: { xpro: procedureXslt },
-      schemaList: { xpro: procedureSchema },
       commit: "",
       content: "",
       view: null
@@ -53,7 +48,6 @@ export default {
   methods: {
     save() {
       const xml = html2xml(this.view.dom, this.content);
-      console.log(xml);
       Vue.axios
         .put(
           "/docs/" +
@@ -77,24 +71,14 @@ export default {
     },
     xmlInEditor() {
       if (this.meta.type == "xpro") {
-        const xsltProcessor = new XSLTProcessor();
-        const xsltDom = new DOMParser().parseFromString(
-          this.xsltList[this.meta.type],
-          "text/xml"
-        );
-        xsltProcessor.importStylesheet(xsltDom);
-        const xml = new DOMParser().parseFromString(this.content, "text/xml");
-        const html = xsltProcessor.transformToFragment(xml, document);
-        const dParser = PMDOMParser.fromSchema(this.schemaList[this.meta.type]);
-        const state = EditorState.create({
-          schema: this.schemaList[this.meta.type],
-          doc: dParser.parse(html),
-          plugins: [keymap(baseKeymap)]
-        });
         while (this.$refs.editor.firstChild) {
           this.$refs.editor.firstChild.remove();
         }
-        this.view = new EditorView(this.$refs.editor, { state });
+
+        const procedure = new Procedure(this.content);
+        this.view = new EditorView(this.$refs.editor, {
+          state: procedure.state
+        });
       } else {
         //RAW
       }
