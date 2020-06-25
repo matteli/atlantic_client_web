@@ -28,6 +28,7 @@ export default function (html, xmlInit) {
     } else if (node.nodeType == 3) {
       const textElmt = document.createTextNode(node.nodeValue);
       treeXml.currentNode.appendChild(textElmt);
+      treeXml.parentNode();
     }
     return
   }

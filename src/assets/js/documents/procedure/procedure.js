@@ -17,6 +17,9 @@ import {
   redo,
   history
 } from "prosemirror-history";
+import {
+  insertPoint
+} from "prosemirror-transform";
 
 
 import {
@@ -137,6 +140,21 @@ const schema = new Schema({
   topNode: "content"
 });
 
+function addProceduralStep() {
+  return function (state, dispatch) {
+    let {
+      $from,
+      $to
+    } = state.selection;
+    const proceduralStepNode = schema.nodes.proceduralStep;
+    const paraNode = schema.nodes.para;
+    let point = insertPoint($from.doc, $from.pos, proceduralStepNode);
+    console.log(dispatch);
+    if (!point) return false;
+    if (dispatch) dispatch(state.tr.insert(point, proceduralStepNode.create(null, paraNode.create())));
+    return true;
+  }
+}
 
 export class Procedure {
   constructor(content) {
@@ -149,6 +167,13 @@ export class Procedure {
     const xml = new DOMParser().parseFromString(content, "text/xml");
     const html = xsltProcessor.transformToFragment(xml, document);
     const dParser = PMDOMParser.fromSchema(schema);
+    this.commands = {
+      "proceduralStep": addProceduralStep(),
+      "title": setBlockType(schema.nodes.title, {
+        level: 1
+      }),
+      "para": setBlockType(schema.nodes.para, {}),
+    }
 
     this.state = EditorState.create({
       schema: schema,

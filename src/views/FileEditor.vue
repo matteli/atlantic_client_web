@@ -6,8 +6,15 @@
           <font-awesome-icon icon="save" />
         </b-button>
         <b-button-group class="mx-1">
-          <b-button>Title</b-button>
-          <b-button>Para</b-button>
+          <b-button @click="proceduralStep()">
+            <font-awesome-icon icon="tasks" />
+          </b-button>
+          <b-button @click="title()">
+            <font-awesome-icon icon="heading" />
+          </b-button>
+          <b-button @click="para()">
+            <font-awesome-icon icon="paragraph" />
+          </b-button>
         </b-button-group>
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto">
@@ -23,10 +30,8 @@
 import Vue from "vue";
 import html2xml from "@/assets/js/html2xml.js";
 import Login from "@/components/Login.vue";
-
-import { EditorView } from "prosemirror-view";
-
 import { Procedure } from "@/assets/js/documents/procedure/procedure.js";
+import { EditorView } from "prosemirror-view";
 
 export default {
   name: "FileEditor",
@@ -41,13 +46,15 @@ export default {
       },
       commit: "",
       content: "",
-      view: null
+      view: null,
+      procedure: null
     };
   },
   components: { Login },
   methods: {
     save() {
       const xml = html2xml(this.view.dom, this.content);
+      console.log(xml);
       Vue.axios
         .put(
           "/docs/" +
@@ -70,18 +77,31 @@ export default {
         });
     },
     xmlInEditor() {
+      while (this.$refs.editor.firstChild) {
+        this.$refs.editor.firstChild.remove();
+      }
       if (this.meta.type == "xpro") {
-        while (this.$refs.editor.firstChild) {
-          this.$refs.editor.firstChild.remove();
-        }
-
-        const procedure = new Procedure(this.content);
+        this.procedure = new Procedure(this.content);
         this.view = new EditorView(this.$refs.editor, {
-          state: procedure.state
+          state: this.procedure.state
         });
       } else {
         //RAW
       }
+    },
+    proceduralStep() {
+      this.procedure.commands["proceduralStep"](
+        this.view.state,
+        this.view.dispatch
+      );
+    },
+    title() {
+      console.log(
+        this.procedure.commands["title"](this.view.state, this.view.dispatch)
+      );
+    },
+    para() {
+      this.procedure.commands["para"](this.view.state, this.view.dispatch);
     }
   },
   mounted() {
