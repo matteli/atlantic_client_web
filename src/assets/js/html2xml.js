@@ -20,15 +20,14 @@ export default function (html, xmlInit) {
       if (node.hasChildNodes()) {
         treeXml.lastChild();
         walk(node.firstChild);
+        treeXml.parentNode();
       }
       if (node.nextSibling) {
-        treeXml.parentNode();
         walk(node.nextSibling);
       }
     } else if (node.nodeType == 3) {
       const textElmt = document.createTextNode(node.nodeValue);
       treeXml.currentNode.appendChild(textElmt);
-      treeXml.parentNode();
     }
     return
   }

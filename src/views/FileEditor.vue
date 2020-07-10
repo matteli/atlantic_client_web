@@ -96,9 +96,7 @@ export default {
       );
     },
     title() {
-      console.log(
-        this.procedure.commands["title"](this.view.state, this.view.dispatch)
-      );
+      this.procedure.commands["title"](this.view.state, this.view.dispatch);
     },
     para() {
       this.procedure.commands["para"](this.view.state, this.view.dispatch);
@@ -126,4 +124,5 @@ export default {
 
 <style lang="scss">
 @import "~prosemirror-view/style/prosemirror.css";
+@import "../assets/procedure.css";
 </style>
