@@ -16,17 +16,6 @@
       <b-alert :variant="alertColor" show>{{ title }}</b-alert>
 
       <b-form @submit="onSubmit" v-if="show">
-        <b-form-group label="Title" label-for="title">
-          <b-form-input
-            id="title"
-            type="text"
-            v-model="data.dd"
-            required
-            autofocus
-            placeholder="Enter the title of your file..."
-          />
-        </b-form-group>
-
         <b-form-group label="System code" label-for="systemCode">
           <b-input-group>
             <b-form-select
@@ -114,6 +103,25 @@
           </b-form-select>
         </b-form-group>
 
+        <b-form-group label="Technical Name" label-for="techName">
+          <b-form-input
+            id="techName"
+            type="text"
+            v-model="data.techName"
+            required
+            placeholder="Ex : Outer cell, main landing gear actuator..."
+          />
+        </b-form-group>
+
+        <b-form-group label="Information Name" label-for="infoName">
+          <b-form-input
+            id="infoName"
+            type="text"
+            v-model="data.infoName"
+            placeholder="Ex : Removal, test..."
+          />
+        </b-form-group>
+
         <b-button :disabled="!completeTitle" type="submit" variant="primary">Submit</b-button>
         <b-button
           type="button"
@@ -138,6 +146,8 @@ export default {
     return {
       data: {
         type: "",
+        techName: "",
+        infoName: "",
         systemDiffCode: "A",
         systemCode: "XX",
         subSystemCode: "XX",
