@@ -1,30 +1,17 @@
 import {
-  EditorState
-} from "prosemirror-state";
-import {
   Schema,
-  DOMParser as PMDOMParser
 } from "prosemirror-model";
-import {
-  keymap
-} from "prosemirror-keymap";
-import {
-  baseKeymap,
-  setBlockType
-} from "prosemirror-commands";
-import {
-  undo,
-  redo,
-  history
-} from "prosemirror-history";
 import {
   insertPoint
 } from "prosemirror-transform";
 
-
 import {
   procedureXslt
-} from "@/assets/js/documents/procedure/procedure.xslt.js";
+} from "@/assets/js/documents/procedure.xslt.js";
+
+import {
+  Document
+} from "@/assets/js/documents/document.js";
 
 const schema = new Schema({
   nodes: {
@@ -156,36 +143,13 @@ function addProceduralStep() {
   }
 }
 
-export class Procedure {
-  constructor(content) {
-    const xsltProcessor = new XSLTProcessor();
+export class Procedure extends Document {
+  constructor(xml) {
     const xsltDom = new DOMParser().parseFromString(
       procedureXslt,
       "text/xml"
     );
-    xsltProcessor.importStylesheet(xsltDom);
-    const xml = new DOMParser().parseFromString(content, "text/xml");
-    const html = xsltProcessor.transformToFragment(xml, document);
-    const dParser = PMDOMParser.fromSchema(schema);
-    this.commands = {
-      "proceduralStep": addProceduralStep(),
-      "title": setBlockType(schema.nodes.title, {
-        level: 1
-      }),
-      "para": setBlockType(schema.nodes.para, {}),
-    }
-
-    this.state = EditorState.create({
-      schema: schema,
-      doc: dParser.parse(html),
-      plugins: [
-        history(),
-        keymap({
-          "Mod-z": undo,
-          "Mod-y": redo
-        }),
-        keymap(baseKeymap)
-      ]
-    });
+    super(xml, xsltDom, schema);
+    this.commands.proceduralStep = addProceduralStep();
   }
 }

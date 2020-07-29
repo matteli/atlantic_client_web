@@ -54,41 +54,41 @@ export default {
       fields: [
         {
           key: "filename",
-          sortable: true
+          sortable: true,
         },
         {
           key: "editor",
-          sortable: true
+          sortable: true,
         },
         {
           key: "state",
-          sortable: true
+          sortable: true,
         },
         {
           key: "action",
-          sortable: false
-        }
+          sortable: false,
+        },
       ],
       files: [],
       models: [],
       references: [],
       modelSelected: this.model,
-      referenceSelected: this.reference
+      referenceSelected: this.reference,
     };
   },
   props: {
     model: {
       type: String,
-      default: ""
+      default: "",
     },
     reference: {
       type: String,
-      default: ""
-    }
+      default: "",
+    },
   },
   components: {
     AddFile,
-    Login
+    Login,
   },
   methods: {
     colorState(state) {
@@ -116,17 +116,17 @@ export default {
         params: {
           name: name,
           model: this.modelSelected,
-          reference: this.referenceSelected
-        }
+          reference: this.referenceSelected,
+        },
       });
     },
     getModels() {
       let model = [{ value: "", text: "-- Select a model plane --" }];
-      Vue.axios.get("/docs").then(data => {
+      Vue.axios.get("/docs").then((data) => {
         for (let d in data.data) {
           model.push({
             value: data.data[d]["slug_model_plane"],
-            text: data.data[d]["model_plane"]
+            text: data.data[d]["model_plane"],
           });
         }
       });
@@ -134,11 +134,11 @@ export default {
     },
     getRefs(model) {
       let references = [{ value: "", text: "-- Select a reference --" }];
-      Vue.axios.get("/docs/" + model + "/references").then(data => {
+      Vue.axios.get("/docs/" + model + "/references").then((data) => {
         for (let d in data.data) {
           references.push({
             value: data.data[d],
-            text: data.data[d]
+            text: data.data[d],
           });
         }
       });
@@ -148,69 +148,69 @@ export default {
       let files = [];
       Vue.axios
         .get("/docs/" + model + "/references/" + reference + "/files")
-        .then(data => {
+        .then((data) => {
           for (let d in data.data) {
             let file = {
-              hash: data.data[d].hash,
+              type: data.data[d]["type"],
               filename: data.data[d]["filename"],
-              editor: data.data[d]["editor"],
-              state: data.data[d]["state"]
+              //editor: data.data[d]["editor"],
+              //state: data.data[d]["state"]
             };
             files.push(file);
           }
         });
       return files;
-    }
+    },
   },
 
   watch: {
-    referenceSelected: function(reference) {
+    referenceSelected: function (reference) {
       if (reference) {
         this.files = this.getFiles(this.modelSelected, reference);
         Vue.router.push({
           name: "FilelistRef",
           params: {
             model: this.modelSelected,
-            reference: reference
-          }
+            reference: reference,
+          },
         });
       } else {
         Vue.router.push({
           name: "FilelistModel",
           params: {
-            model: this.modelSelected
-          }
+            model: this.modelSelected,
+          },
         });
         this.files = [];
       }
     },
-    modelSelected: function(model) {
+    modelSelected: function (model) {
       if (model) {
         this.references = this.getRefs(model);
         Vue.router.push({
           name: "FilelistModel",
           params: {
-            model: model
-          }
+            model: model,
+          },
         });
       } else {
         this.references = [{ value: "", text: "-- Select a reference --" }];
         this.referenceSelected = "";
         Vue.router.push({
-          name: "Filelist"
+          name: "Filelist",
         });
       }
-    }
+    },
   },
   computed: {
-    modelIsSelected: function() {
+    modelIsSelected: function () {
       if (this.modelSelected) return true;
       return false;
     },
-    referenceIsSelected: function() {
+    referenceIsSelected: function () {
       if (this.referenceSelected) return true;
       return false;
-    }
+    },
   },
   mounted() {
     this.models = this.getModels();
@@ -222,7 +222,7 @@ export default {
     } else {
       this.references = [{ value: "", text: "-- Select a reference --" }];
     }
-  }
+  },
 };
 </script>
 
