@@ -199,7 +199,6 @@
 import Vue from "vue";
 import { systemCode, subSystemCode } from "@/assets/js/SystemCode.js";
 import { infoChapterCode, infoCode } from "@/assets/js/InfoCode.js";
-import { IntType } from "../../../lib/threejs/three.js/src/Three";
 
 export default {
   name: "AddFile",
@@ -227,6 +226,7 @@ export default {
         securityClassification: 1,
         file: null,
       },
+      type: "",
       infoChapterCode: "",
       optionsInfoChapterCode: infoChapterCode,
       optionsSystemCode: systemCode,
@@ -257,8 +257,8 @@ export default {
       if (type == "DMC") {
         if (this.data.infoCode == "XXX") return false;
         if (this.data.itemLocationCode == "Z") return false;
-      } else if (type == "ICN") {
-      }
+      } //else if (type == "ICN") {
+      //}
       if (this.fileExist(this.title)) return false;
       return true;
     },
@@ -290,6 +290,7 @@ export default {
         this.codeToStr(this.data.securityClassification, 2) +
         "." +
         extension;
+      return title;
     },
     titleDMC: function () {
       const title =
