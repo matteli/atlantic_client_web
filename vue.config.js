@@ -31,7 +31,7 @@ module.exports = {
             skipWaiting: true,
             runtimeCaching: [{
                     urlPattern: /\/api\//,
-                    handler: "networkFirst",
+                    handler: "NetworkFirst",
                     options: {
                         cacheName: 'api-cache',
                         cacheableResponse: {
@@ -41,7 +41,7 @@ module.exports = {
                 },
                 {
                     urlPattern: /\/media\//,
-                    handler: "cacheFirst",
+                    handler: "CacheFirst",
                     options: {
                         cacheName: 'media-cache',
                         cacheableResponse: {
@@ -51,7 +51,7 @@ module.exports = {
                 },
                 {
                     urlPattern: /\/img\/icons|\.ico/,
-                    handler: "cacheFirst",
+                    handler: "CacheFirst",
                     options: {
                         cacheName: 'ico-cache',
                         cacheableResponse: {
