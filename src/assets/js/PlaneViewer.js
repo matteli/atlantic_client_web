@@ -55,7 +55,7 @@ export class PlaneViewer {
             cameraPosition: [],
             cameraZoom: [],
             cameraTarget: [],
-            duration: 1,
+            duration: 1.0,
         };
     }
 
@@ -228,6 +228,9 @@ export class PlaneViewer {
     render() {
         if (this.animation.enabled) {
             var delta = this.clock.getElapsedTime();
+            if (delta >= this.animation.duration) {
+                delta = this.animation.duration;
+            };
             var xpos = (this.animation.cameraPosition[3] - this.animation.cameraPosition[0]) * delta / this.animation.duration + this.animation.cameraPosition[0];
             var ypos = (this.animation.cameraPosition[4] - this.animation.cameraPosition[1]) * delta / this.animation.duration + this.animation.cameraPosition[1];
             var zpos = (this.animation.cameraPosition[5] - this.animation.cameraPosition[2]) * delta / this.animation.duration + this.animation.cameraPosition[2];
@@ -236,7 +239,7 @@ export class PlaneViewer {
             var ztarget = (this.animation.cameraTarget[5] - this.animation.cameraTarget[2]) * delta / this.animation.duration + this.animation.cameraTarget[2];
             var zoom = (this.animation.cameraZoom[1] - this.animation.cameraZoom[0]) * delta / this.animation.duration + this.animation.cameraZoom[0];
             this.setCamera(xpos, ypos, zpos, xtarget, ytarget, ztarget, zoom);
-            if (delta > this.animation.duration) {
+            if (delta >= this.animation.duration) {
                 this.animation.enabled = false;
                 this.clock.stop();
                 this.clock.autoStart = true;
