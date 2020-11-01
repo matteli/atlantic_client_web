@@ -18,19 +18,24 @@
     <b-form v-if="$auth.check()">
       <b-input-group>
         <b-input-group-prepend>
+          <add-photo ref="addPhoto" v-on:add-photo="addPhoto" />
           <get-photo ref="getPhoto" v-on:get-photo="addPhoto" />
         </b-input-group-prepend>
-        <b-form-input id="textarea" v-model="data.text" placeholder="Enter comment..." />
+        <b-form-input
+          id="textarea"
+          v-model="data.text"
+          placeholder="Enter comment..."
+        />
         <b-input-group-append>
-          <template v-if="page.progress=='O'">
+          <template v-if="page.progress == 'O'">
             <progress-button v-on:click="comment('')" />
             <progress-button v-on:click="comment('F')" progress="F" />
           </template>
-          <template v-else-if="page.progress=='F'">
+          <template v-else-if="page.progress == 'F'">
             <progress-button v-on:click="comment('O')" progress="O" />
             <progress-button v-on:click="comment('C')" progress="C" />
           </template>
-          <template v-else-if="page.progress=='C'">
+          <template v-else-if="page.progress == 'C'">
             <progress-button v-on:click="comment('O')" progress="O" />
           </template>
         </b-input-group-append>
@@ -46,6 +51,7 @@ import ProgressButton from "@/components/ProgressButton.vue";
 import NatureBadge from "@/components/NatureBadge.vue";
 import Comment from "@/components/Comment.vue";
 import GetPhoto from "@/components/GetPhoto.vue";
+import AddPhoto from "@/components/AddPhoto.vue";
 import { systemCode } from "@/assets/js/SystemCode.js";
 
 export default {
@@ -58,8 +64,8 @@ export default {
       data: {
         text: "",
         progress: "",
-        image: ""
-      }
+        image: "",
+      },
     };
   },
   components: {
@@ -67,10 +73,11 @@ export default {
     ProgressButton,
     NatureBadge,
     Comment,
-    GetPhoto
+    GetPhoto,
+    AddPhoto,
   },
   props: {
-    label: Number
+    label: Number,
   },
   watch: {
     label(lab) {
@@ -78,7 +85,7 @@ export default {
         this.updateAll(lab);
         this.clear();
       }
-    }
+    },
   },
   methods: {
     clear() {
@@ -103,14 +110,14 @@ export default {
           this.updateAll(this.page.id);
           //this.$emit("labelchanged");
         })
-        .catch(err => {
+        .catch((err) => {
           this.error = err.response.data.error;
         });
     },
     updateAll(page) {
       Vue.axios
         .get("/planes/" + this.$route.params.registration + "/pages/" + page)
-        .then(data => {
+        .then((data) => {
           this.page = data.data;
         });
       Vue.axios
@@ -121,14 +128,14 @@ export default {
             page +
             "/comments"
         )
-        .then(data => {
+        .then((data) => {
           this.comments = data.data;
         });
     },
     addPhoto(img) {
       this.data.image = img;
-    }
-  }
+    },
+  },
 };
 </script>
 
