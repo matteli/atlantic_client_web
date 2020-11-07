@@ -230,7 +230,7 @@ export class PlaneViewer {
             var delta = this.clock.getElapsedTime();
             if (delta >= this.animation.duration) {
                 delta = this.animation.duration;
-            };
+            }
             var xpos = (this.animation.cameraPosition[3] - this.animation.cameraPosition[0]) * delta / this.animation.duration + this.animation.cameraPosition[0];
             var ypos = (this.animation.cameraPosition[4] - this.animation.cameraPosition[1]) * delta / this.animation.duration + this.animation.cameraPosition[1];
             var zpos = (this.animation.cameraPosition[5] - this.animation.cameraPosition[2]) * delta / this.animation.duration + this.animation.cameraPosition[2];
