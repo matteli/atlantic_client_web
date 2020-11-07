@@ -206,14 +206,16 @@ export class PlaneViewer {
 
     getCamera() {
         return {
-            target: this.controls.target,
+            //target: this.controls.target,
+            target: this.cameraTarget,
             position: this.camera.position,
             zoom: this.camera.zoom
         }
     }
 
     setCamera(xpos, ypos, zpos, xtarget, ytarget, ztarget, zoom) {
-        this.controls.target.set(xtarget, ytarget, ztarget);
+        //this.controls.target.set(xtarget, ytarget, ztarget);
+        this.cameraTarget.set(xtarget, ytarget, ztarget);
         this.camera.zoom = zoom;
         this.camera.position.set(xpos, ypos, zpos);
         this.updateCamera();
@@ -223,6 +225,7 @@ export class PlaneViewer {
         this.camera.aspect = this.aspectRatio;
         this.camera.lookAt(this.cameraTarget);
         this.camera.updateProjectionMatrix();
+        this.controls.update();
     }
 
     render() {

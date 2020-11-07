@@ -9,7 +9,12 @@
           v-bind:camera="getCamera"
           class="mx-1"
         />
-        <b-dropdown title="Views" class="mx-1" variant="primary" v-bind:disabled="tour">
+        <b-dropdown
+          title="Views"
+          class="mx-1"
+          variant="primary"
+          v-bind:disabled="tour"
+        >
           <template slot="button-content">
             <font-awesome-icon icon="video" />
             <span class="sr-only">View</span>
@@ -18,18 +23,24 @@
             v-for="(name, id) in viewsOptions"
             v-bind:key="id"
             v-bind:value="id"
-            @click="view=id"
-          >{{name}}</b-dropdown-item>
+            @click="changeView(id)"
+            >{{ name }}</b-dropdown-item
+          >
         </b-dropdown>
-        <b-dropdown id="label-filters" class="mx-1" variant="primary" v-bind:disabled="tour">
+        <b-dropdown
+          id="label-filters"
+          class="mx-1"
+          variant="primary"
+          v-bind:disabled="tour"
+        >
           <template slot="button-content">
             <font-awesome-icon
-              v-if="colorLabel=='N'"
+              v-if="colorLabel == 'N'"
               title="Colors are nature"
               icon="exclamation-triangle"
             />
             <font-awesome-icon
-              v-else-if="colorLabel=='P'"
+              v-else-if="colorLabel == 'P'"
               title="Colors are progress"
               icon="tasks"
             />
@@ -37,36 +48,76 @@
           <b-dropdown-form>
             <b-form-group>
               <b-form-radio-group id="color-label" v-model="colorLabel" buttons>
-                <b-form-radio value="N" title="Nature" button-variant="outline-primary">
+                <b-form-radio
+                  value="N"
+                  title="Nature"
+                  button-variant="outline-primary"
+                >
                   <font-awesome-icon icon="exclamation-triangle" />
                 </b-form-radio>
-                <b-form-radio value="P" title="Progress" button-variant="outline-primary">
+                <b-form-radio
+                  value="P"
+                  title="Progress"
+                  button-variant="outline-primary"
+                >
                   <font-awesome-icon icon="tasks" />
                 </b-form-radio>
               </b-form-radio-group>
             </b-form-group>
-            <b-form-group v-if="colorLabel=='N'">
-              <b-form-checkbox-group v-model="filters.nature" buttons id="filters-nature">
-                <b-form-checkbox title="Damage" value="D" button-variant="outline-danger">
+            <b-form-group v-if="colorLabel == 'N'">
+              <b-form-checkbox-group
+                v-model="filters.nature"
+                buttons
+                id="filters-nature"
+              >
+                <b-form-checkbox
+                  title="Damage"
+                  value="D"
+                  button-variant="outline-danger"
+                >
                   <font-awesome-icon icon="bolt" />
                 </b-form-checkbox>
-                <b-form-checkbox title="Works" value="W" button-variant="outline-success">
+                <b-form-checkbox
+                  title="Works"
+                  value="W"
+                  button-variant="outline-success"
+                >
                   <font-awesome-icon icon="tools" />
                 </b-form-checkbox>
-                <b-form-checkbox title="Others" value="O" button-variant="outline-warning">
+                <b-form-checkbox
+                  title="Others"
+                  value="O"
+                  button-variant="outline-warning"
+                >
                   <font-awesome-icon icon="exclamation-triangle" />
                 </b-form-checkbox>
               </b-form-checkbox-group>
             </b-form-group>
-            <b-form-group v-else-if="colorLabel=='P'">
-              <b-form-checkbox-group v-model="filters.progress" buttons id="filters-progress">
-                <b-form-checkbox title="Opened" value="O" button-variant="outline-danger">
+            <b-form-group v-else-if="colorLabel == 'P'">
+              <b-form-checkbox-group
+                v-model="filters.progress"
+                buttons
+                id="filters-progress"
+              >
+                <b-form-checkbox
+                  title="Opened"
+                  value="O"
+                  button-variant="outline-danger"
+                >
                   <font-awesome-icon icon="file" />
                 </b-form-checkbox>
-                <b-form-checkbox title="Fixed" value="F" button-variant="outline-warning">
+                <b-form-checkbox
+                  title="Fixed"
+                  value="F"
+                  button-variant="outline-warning"
+                >
                   <font-awesome-icon icon="file-alt" />
                 </b-form-checkbox>
-                <b-form-checkbox title="Checked" value="C" button-variant="outline-success">
+                <b-form-checkbox
+                  title="Checked"
+                  value="C"
+                  button-variant="outline-success"
+                >
                   <font-awesome-icon icon="file-signature" />
                 </b-form-checkbox>
               </b-form-checkbox-group>
@@ -80,13 +131,19 @@
           <font-awesome-icon icon="plane" />
         </b-button>
         <b-button-group class="mx-1">
-          <b-button v-bind:variant="tour ? 'warning':'primary'" @click="previousLabel()">
+          <b-button
+            v-bind:variant="tour ? 'warning' : 'primary'"
+            @click="previousLabel()"
+          >
             <font-awesome-icon icon="less-than" />
           </b-button>
           <b-button :pressed.sync="centerLabel" variant="outline-warning">
             <font-awesome-icon icon="video" />
           </b-button>
-          <b-button v-bind:variant="tour ? 'success':'primary'" @click="nextLabel()">
+          <b-button
+            v-bind:variant="tour ? 'success' : 'primary'"
+            @click="nextLabel()"
+          >
             <font-awesome-icon icon="greater-than" />
           </b-button>
         </b-button-group>
@@ -105,19 +162,33 @@
                   placeholder="Enter a name for this view..."
                 />
                 <b-input-group-append class="mr-2">
-                  <b-button v-if="$auth.check('admin')" type="submit" variant="primary">
+                  <b-button
+                    v-if="$auth.check('admin')"
+                    type="submit"
+                    variant="primary"
+                  >
                     <font-awesome-icon icon="camera" />
                   </b-button>
                 </b-input-group-append>
               </b-input-group>
             </b-form>
-            <b-alert class="m-2" v-show="addViewData.msg" show>{{ addViewData.msg }}</b-alert>
+            <b-alert class="m-2" v-show="addViewData.msg" show>{{
+              addViewData.msg
+            }}</b-alert>
           </template>
         </login>
       </b-navbar-nav>
     </b-navbar>
-    <div id="plane" ref="plane" v-on:click="onClickScene" @touchend="onClickScene"></div>
-    <view-page v-bind:label="getSelectedLabel" v-on:labelchanged="loadLabels()" />
+    <div
+      id="plane"
+      ref="plane"
+      v-on:click="onClickScene"
+      @touchend="onClickScene"
+    ></div>
+    <view-page
+      v-bind:label="getSelectedLabel"
+      v-on:labelchanged="loadLabels()"
+    />
   </div>
 </template>
 
@@ -140,14 +211,13 @@ export default {
       centerLabel: true,
       filters: {
         nature: ["D", "W"],
-        progress: ["O", "F"]
+        progress: ["O", "F"],
       },
       tour: false,
       colorLabel: "P",
       selectedLabel: null,
       viewsOptions: {},
       viewsData: {},
-      view: "",
       addViewData: {
         data: {
           name: "",
@@ -157,35 +227,35 @@ export default {
           xtarget: 0,
           ytarget: 0,
           ztarget: 0,
-          zoom: 0
+          zoom: 0,
         },
         show: true,
-        msg: null
-      }
+        msg: null,
+      },
     };
   },
   components: {
     Login,
     AddPage,
-    ViewPage
+    ViewPage,
   },
   computed: {
-    getSelectedLabel: function() {
+    getSelectedLabel: function () {
       if (this.selectedLabel) return this.selectedLabel.id;
       else return 0;
     },
 
-    getPosCursor: function() {
+    getPosCursor: function () {
       if (!this.sphereCursor || !this.sphereCursor.visible)
         return { x: null, y: null, z: null };
       return {
         x: this.sphereCursor.position.getComponent(0),
         y: this.sphereCursor.position.getComponent(1),
-        z: this.sphereCursor.position.getComponent(2)
+        z: this.sphereCursor.position.getComponent(2),
       };
     },
 
-    getCamera: function() {
+    getCamera: function () {
       var camera = this.planeViewer.getCamera();
       return {
         xpos: camera.position.x,
@@ -194,46 +264,40 @@ export default {
         xtarget: camera.target.x,
         ytarget: camera.target.y,
         ztarget: camera.target.z,
-        zoom: camera.zoom
+        zoom: camera.zoom,
       };
-    }
+    },
   },
   watch: {
-    colorLabel: function() {
-      this.labels.forEach(label => {
+    colorLabel: function () {
+      this.labels.forEach((label) => {
         var color = this.getColorLabel(label);
         if (color) this.planeViewer.changeColorLabel(label.id, color);
       });
     },
 
     filters: {
-      handler: function() {
+      handler: function () {
         this.drawLabels();
       },
-      deep: true
+      deep: true,
     },
 
-    labels: function() {
+    labels: function () {
       this.drawLabels();
     },
 
-    view: function(view) {
-      if (view) {
-        this.planeViewer.moveTo(this.viewsData[view]);
-      }
-    },
-
-    centerLabel: function(centerLabel) {
+    centerLabel: function (centerLabel) {
       if (centerLabel && this.selectedLabel) {
         this.planeViewer.moveTo(this.selectedLabel.camera);
       }
     },
 
-    tour: function(tour) {
+    tour: function (tour) {
       if (tour) {
         Vue.axios
           .get("/planes/" + this.$route.params.registration + "/tours")
-          .then(data => {
+          .then((data) => {
             this.labels = data.data;
             this.filters["nature"] = ["D", "W", "O"];
             this.filters["progress"] = ["O", "F"];
@@ -246,9 +310,14 @@ export default {
         this.loadLabels();
         this.unSelectLabel();
       }
-    }
+    },
   },
   methods: {
+    changeView(view) {
+      if (view) {
+        this.planeViewer.moveTo(this.viewsData[view]);
+      }
+    },
     getColorLabel(label) {
       var color = "black";
       if (this.colorLabel == "P") {
@@ -287,7 +356,7 @@ export default {
       if (this.labels.length) {
         var selectedLabelLoaded = false;
         this.planeViewer.unvisibleLabels();
-        this.labels.forEach(label => {
+        this.labels.forEach((label) => {
           var color = this.getColorLabel(label);
           if (color != "black") {
             this.planeViewer.visibleLabel(label.id);
@@ -317,7 +386,7 @@ export default {
       var previousLabel = null;
       var maxLabel = null;
       var delta = 0;
-      this.labels.forEach(label => {
+      this.labels.forEach((label) => {
         if (
           (this.selectedLabel && this.selectedLabel.id != label.id) ||
           !this.selectedLabel
@@ -342,7 +411,7 @@ export default {
       var nextLabel = null;
       var minLabel = null;
       var delta = 0;
-      this.labels.forEach(label => {
+      this.labels.forEach((label) => {
         if (
           (this.selectedLabel && this.selectedLabel.id != label.id) ||
           !this.selectedLabel
@@ -364,23 +433,25 @@ export default {
     },
 
     loadPlane() {
-      Vue.axios.get("/planes/" + this.$route.params.registration).then(data => {
-        this.plane = data.data;
-        this.planeViewer.load(
-          "/media/" + this.plane.modelPlane.gltf,
-          this.$route.params.registration
-        );
-      });
+      Vue.axios
+        .get("/planes/" + this.$route.params.registration)
+        .then((data) => {
+          this.plane = data.data;
+          this.planeViewer.load(
+            "/media/" + this.plane.modelPlane.gltf,
+            this.$route.params.registration
+          );
+        });
     },
 
     loadView() {
       Vue.axios
         .get("/planes/" + this.$route.params.registration + "/cameras")
-        .then(data => {
-          data.data.forEach(view => {
+        .then((data) => {
+          data.data.forEach((view) => {
             this.$set(this.viewsData, view.id, view);
             this.$set(this.viewsOptions, view.id, view.name);
-            if (!this.view) this.view = view.id;
+            if (!this.view) this.changeView(view.id);
           });
         });
     },
@@ -413,7 +484,7 @@ export default {
       } else if (typeof cursor.object.name === "number") {
         //clicking label
         if (this.sphereCursor) this.sphereCursor.visible = false;
-        this.labels.some(label => {
+        this.labels.some((label) => {
           if (label.id == cursor.object.name) {
             this.changeSelectedLabel(label);
             return true;
@@ -458,7 +529,7 @@ export default {
               "/pages?" +
               querystring.stringify(this.filters)
           )
-          .then(data => {
+          .then((data) => {
             this.labels = data.data;
           });
       } else {
@@ -493,11 +564,11 @@ export default {
         .then(() => {
           this.addViewData.msg = "View added";
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           //this.error = err.response.data.error;
         });
-    }
+    },
   },
 
   mounted() {
@@ -520,7 +591,7 @@ export default {
 
   beforeDestroy() {
     window.removeEventListener("resize", this.resizeWindow);
-  }
+  },
 };
 </script>
 
