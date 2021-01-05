@@ -14,7 +14,7 @@
     "@fortawesome/vue-fontawesome": "^2.0.0",
     "@websanova/vue-auth": "^2.22.1-beta",
     "ajv": "^6.12.6",
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "bootstrap": "^4.5.3",
     "bootstrap-vue": "^2.18.1",
     "i": "^0.3.6",
