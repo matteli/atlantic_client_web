@@ -31,7 +31,7 @@
     "querystring": "^0.2.0",
     "raw-loader": "^4.0.2",
     "register-service-worker": "^1.7.1",
-    "three": "^0.122.0",
+    "three": "^0.137.0",
     "vue": "^2.6.12",
     "vue-axios": "^2.1.5",
     "vue-router": "^3.4.9"
